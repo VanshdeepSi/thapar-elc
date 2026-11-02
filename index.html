@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Experiential Learning Centre (ELC) | Thapar Institute of Engineering &amp; Technology</title>
+  <meta name="description" content="Official platform of the Experiential Learning Centre (ELC) at Thapar Institute of Engineering and Technology (TIET), Patiala. Bridging undergraduate engineering theory and industrial design since 2018.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/elc_logo.png">
+
+  <!-- Distinctive Typography: Syne (Display) + Plus Jakarta Sans + Inter + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandNavy: '#0f2756',
+            brandCrimson: '#be1e2d',
+            carbon: {
+              900: '#0f172a',
+              800: '#1e293b',
+              700: '#334155'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-white text-slate-800 antialiased selection:bg-[#be1e2d] selection:text-white">
+
+  <!-- =========================================================================
+       1. PRIMARY CLEAN ARCHITECTURAL NAVIGATION BAR (NO BLUE TOPBAR)
+       ========================================================================= -->
+  <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="flex items-center justify-between h-24">
+        
+        <!-- Official Institutional Logos -->
+        <a href="#" class="flex items-center gap-4 sm:gap-6">
+          <img src="assets/elc_logo.png" alt="Experiential Learning Centre Logo" class="h-14 sm:h-16 w-auto object-contain">
+          <div class="h-10 w-px bg-slate-200 hidden sm:block"></div>
+          <img src="assets/thapar_official_logo.png" alt="Thapar Institute Official Logo" class="h-11 sm:h-12 w-auto object-contain hidden sm:block">
+        </a>
+
+        <!-- Desktop Navigation Items -->
+        <div class="hidden lg:flex items-center gap-8 text-sm font-jakarta font-semibold text-slate-700">
+          <a href="#model" class="hover:text-[#be1e2d] transition-colors">The Model</a>
+          <a href="#studios" class="hover:text-[#be1e2d] transition-colors">Maker Studios</a>
+          <a href="#breakthroughs" class="hover:text-[#be1e2d] transition-colors">Breakthroughs</a>
+          <a href="#curriculum" class="hover:text-[#be1e2d] transition-colors">Curricular Arc</a>
+          <a href="#leadership" class="hover:text-[#be1e2d] transition-colors">Leadership</a>
+        </div>
+
+        <!-- Action CTAs -->
+        <div class="flex items-center gap-3">
+          <button onclick="openActionModal('safety')" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono-tech font-bold text-slate-700 hover:text-slate-900 px-3.5 py-2.5 rounded border border-slate-300 hover:bg-slate-50 transition-colors">
+            <i data-lucide="shield-check" class="w-4 h-4 text-[#059669]"></i>
+            Safety SOP
+          </button>
+          <button onclick="openActionModal('proposal')" class="inline-flex items-center gap-2 bg-[#be1e2d] hover:bg-[#991522] text-white text-xs font-mono-tech font-bold px-4 py-2.5 rounded shadow-sm transition-colors">
+            <span>Reserve Workbench</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+          <button id="mobile-toggle-btn" class="lg:hidden p-2 text-slate-700">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div id="mobile-nav-dropdown" class="hidden lg:hidden border-t border-slate-200 py-4 space-y-3 text-sm font-jakarta font-semibold text-slate-700">
+        <a href="#model" class="block px-3 py-1.5 hover:text-[#be1e2d]">The Model</a>
+        <a href="#studios" class="block px-3 py-1.5 hover:text-[#be1e2d]">Maker Studios</a>
+        <a href="#breakthroughs" class="block px-3 py-1.5 hover:text-[#be1e2d]">Breakthroughs</a>
+        <a href="#curriculum" class="block px-3 py-1.5 hover:text-[#be1e2d]">Curricular Arc</a>
+        <a href="#leadership" class="block px-3 py-1.5 hover:text-[#be1e2d]">Leadership</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- =========================================================================
+       2. HERO SECTION (EDITORIAL OPEN CANVAS WITH KINEMATIC MECHANISM)
+       ========================================================================= -->
+  <section id="hero-section" class="relative pt-16 pb-24 md:pt-24 md:pb-32 border-b border-slate-200 overflow-hidden">
+    
+    <!-- Bespoke Kinematic Mechanism Canvas Running Silently in Background -->
+    <div class="absolute inset-0 pointer-events-none z-0">
+      <canvas id="kinematicCanvas" class="w-full h-full block opacity-85"></canvas>
+    </div>
+
+    <div id="hero-container" class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+      
+      <div id="hero-content" class="max-w-3xl">
+        
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#0f2756]/10 text-[#0f2756] text-xs font-mono-tech font-bold mb-6">
+          <span class="w-2 h-2 rounded-full bg-[#be1e2d]"></span>
+          ESTABLISHED JANUARY 2018 • TIET PATIALA
+        </div>
+
+        <h1 class="text-4xl sm:text-6xl font-extrabold font-syne text-slate-900 leading-[1.08] tracking-tight mb-6">
+          Experiential Learning Centre
+          <span class="block text-2xl sm:text-3xl font-normal text-slate-500 font-jakarta mt-3">
+            Where undergraduate engineering theory transforms into physical prototypes.
+          </span>
+        </h1>
+
+        <p class="text-base sm:text-lg text-slate-700 leading-relaxed font-normal mb-8 max-w-2xl">
+          TIET’s institutional hub embedding open-ended, non-credit design challenges into every semester of the undergraduate curriculum. Students manufacture circuit boards, build electric powertrains, test satellite systems, and deploy robotics before graduation.
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4 mb-16">
+          <a href="#breakthroughs" class="inline-flex items-center gap-2 bg-[#0f2756] hover:bg-[#0a1b3d] text-white font-semibold text-sm px-6 py-3.5 rounded transition-colors">
+            <span>Explore Flagship Breakthroughs</span>
+            <i data-lucide="arrow-down-right" class="w-4 h-4 text-rose-300"></i>
+          </a>
+          <a href="#studios" class="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-900 font-semibold text-sm px-6 py-3.5 rounded border border-slate-300 transition-colors">
+            <span>Maker Studios &amp; Equipment</span>
+            <i data-lucide="layers" class="w-4 h-4 text-slate-500"></i>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Typographic Key Metrics (Open, separated by hairline rules - NO ENCLOSING BOXES) -->
+      <div id="hero-metrics" class="grid grid-cols-2 lg:grid-cols-4 gap-8 pt-8 border-t border-slate-200">
+        <div>
+          <div class="text-3xl sm:text-4xl font-extrabold font-syne text-slate-900">240 <span class="text-sm font-mono-tech text-[#be1e2d]">CAP</span></div>
+          <div class="text-xs font-mono-tech uppercase font-bold text-slate-400 mt-1">Concurrent Workbenches</div>
+          <p class="text-xs text-slate-600 mt-1 leading-relaxed">60 roof-mounted power workbenches in central activity wings.</p>
+        </div>
+
+        <div>
+          <div class="text-3xl sm:text-4xl font-extrabold font-syne text-slate-900">03 <span class="text-sm font-mono-tech text-[#be1e2d]">STUDIOS</span></div>
+          <div class="text-xs font-mono-tech uppercase font-bold text-slate-400 mt-1">Specialized Maker Spaces</div>
+          <p class="text-xs text-slate-600 mt-1 leading-relaxed">Mechanical fabrication, embedded electronics, and autonomous robotics.</p>
+        </div>
+
+        <div>
+          <div class="text-3xl sm:text-4xl font-extrabold font-syne text-slate-900">14 <span class="text-sm font-mono-tech text-[#be1e2d]">HOURS</span></div>
+          <div class="text-xs font-mono-tech uppercase font-bold text-slate-400 mt-1">Daily Facility Access</div>
+          <p class="text-xs text-slate-600 mt-1 leading-relaxed">Open 09:00 AM to 11:00 PM for hands-on student prototyping.</p>
+        </div>
+
+        <div>
+          <div class="text-3xl sm:text-4xl font-extrabold font-syne text-slate-900">100% <span class="text-sm font-mono-tech text-[#be1e2d]">UG</span></div>
+          <div class="text-xs font-mono-tech uppercase font-bold text-slate-400 mt-1">Curricular Integration</div>
+          <p class="text-xs text-slate-600 mt-1 leading-relaxed">Mandatory non-credit experiential activities from Semester 1 to 5.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       3. THE PEDAGOGICAL MODEL (CORNERSTONE TO CAPSTONE)
+       ========================================================================= -->
+  <section id="model" class="py-24 border-b border-slate-200 bg-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+        
+        <!-- Left Editorial Statement -->
+        <div class="lg:col-span-5">
+          <span class="text-xs font-mono-tech uppercase font-bold text-[#be1e2d] tracking-wider block mb-2">
+            EDUCATIONAL ARCHITECTURE
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-bold font-syne text-slate-900 leading-tight mb-6">
+            The Cornerstone to Capstone Model.
+          </h2>
+          <p class="text-base text-slate-700 leading-relaxed mb-4">
+            Established at TIET in January 2018 under the guidance of institute leadership, ELC was created to replace prescriptive laboratory routines with authentic, open-ended engineering problem-solving.
+          </p>
+          <p class="text-sm text-slate-600 leading-relaxed mb-6">
+            Integrated into undergraduate engineering programs <em>without additional academic credit pressure</em>, students have the freedom to explore physical design, make constructive errors, and build working systems before entering their final-year Capstone projects.
+          </p>
+          <div class="pt-4 border-t border-slate-100 text-xs text-slate-500 font-mono-tech">
+            Outcome-Based Accreditation Standards: Aligned with ABET &amp; Washington Accord requirements.
+          </div>
+        </div>
+
+        <!-- Right 3-Stage Progression (Clean, Unboxed) -->
+        <div class="lg:col-span-7 divide-y divide-slate-100">
+          
+          <div class="pb-8 flex items-start gap-6">
+            <span class="font-mono-tech text-base font-bold text-[#be1e2d]">01</span>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="text-xl font-bold font-syne text-slate-900">Early Discipline Immersion</h3>
+                <span class="text-xs font-mono-tech font-bold text-slate-400 uppercase">Semesters 1 &amp; 2</span>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Direct hands-on experience with CNC laser cutting, chemical PCB etching, thermodynamic pressure apparatus, and Arduino microcontrollers within the first year of college.
+              </p>
+            </div>
+          </div>
+
+          <div class="py-8 flex items-start gap-6">
+            <span class="font-mono-tech text-base font-bold text-[#0f2756]">02</span>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="text-xl font-bold font-syne text-slate-900">Multidisciplinary Systems Integration</h3>
+                <span class="text-xs font-mono-tech font-bold text-slate-400 uppercase">Semesters 3, 4 &amp; 5</span>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Interdisciplinary teams tackle complex engineering design: edge IoT telemetry, municipal wastewater material balance, FPGA digital synthesis on Xilinx Vivado, and 4-DOF servo kinematics.
+              </p>
+            </div>
+          </div>
+
+          <div class="pt-8 flex items-start gap-6">
+            <span class="font-mono-tech text-base font-bold text-amber-700">03</span>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="text-xl font-bold font-syne text-slate-900">Summer Intensive Fellowships</h3>
+                <span class="text-xs font-mono-tech font-bold text-amber-800 uppercase">Pre-Capstone Incubation</span>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Full-time campus research cohorts building functional prototypes: electric vehicle conversions, satellite camera gas chambers, and hospital triage carts.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       4. THE THREE MAKER STUDIOS (CLEAN 3-COLUMN OVERVIEW)
+       ========================================================================= -->
+  <section id="studios" class="py-24 border-b border-slate-200 bg-slate-50/50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div>
+          <span class="text-xs font-mono-tech uppercase font-bold text-[#be1e2d] tracking-wider block mb-1">
+            LABORATORY INFRASTRUCTURE
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-bold font-syne text-slate-900">
+            Three Specialized Maker Studios.
+          </h2>
+        </div>
+        <p class="text-sm text-slate-600 max-w-md">
+          Supported by 3 central Activity Spaces with 60 workbenches serving up to 240 concurrent undergraduate students.
+        </p>
+      </div>
+
+      <!-- 3 Studios Overview (Clean Editorial Columns, No Card Clutter) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <!-- Studio 1: Mechanical -->
+        <div class="pt-6 md:pt-0 md:pr-8">
+          <span class="text-xs font-mono-tech uppercase font-bold text-[#be1e2d] block mb-2">STUDIO 01 • B119 GROUND FLOOR</span>
+          <h3 class="text-2xl font-bold font-syne text-slate-900 mb-2">Mechanical Fabrication</h3>
+          <p class="text-sm text-slate-600 leading-relaxed mb-4">
+            Heavy structural component manufacturing, chassis welding, hydraulic tube forming, and mechanical tensile testing.
+          </p>
+          <div class="space-y-1.5 text-xs text-slate-700 font-mono-tech mb-6">
+            <div>• CNC LASER Cutting Machine</div>
+            <div>• Industrial FDM 3D Printers</div>
+            <div>• Hydraulic Tube Bending Machines</div>
+            <div>• TIG &amp; MIG Welding Stations</div>
+          </div>
+          <div class="text-xs font-mono-tech text-slate-500 pt-3 border-t border-slate-200">
+            Capacity: 30 Students • Hours: 09:00 AM – 06:00 PM
+          </div>
+        </div>
+
+        <!-- Studio 2: Electrical -->
+        <div class="pt-8 md:pt-0 md:px-8">
+          <span class="text-xs font-mono-tech uppercase font-bold text-[#0f2756] block mb-2">STUDIO 02 • B119 MEZZANINE</span>
+          <h3 class="text-2xl font-bold font-syne text-slate-900 mb-2">Electrical &amp; Embedded</h3>
+          <p class="text-sm text-slate-600 leading-relaxed mb-4">
+            Precision PCB prototyping, circuit assembly, power amplifier design, FPGA logic synthesis, and RF frequency tuning.
+          </p>
+          <div class="space-y-1.5 text-xs text-slate-700 font-mono-tech mb-6">
+            <div>• Weller Soldering &amp; Rework Stations</div>
+            <div>• Fluke 15B+ Multimeters &amp; DSOs</div>
+            <div>• Xilinx Vivado FPGA Kits</div>
+            <div>• Chemical Etching &amp; Mask Baths</div>
+          </div>
+          <div class="text-xs font-mono-tech text-slate-500 pt-3 border-t border-slate-200">
+            Capacity: 24 Students • Hours: 09:00 AM – 06:00 PM
+          </div>
+        </div>
+
+        <!-- Studio 3: Robotics -->
+        <div class="pt-8 md:pt-0 md:pl-8">
+          <span class="text-xs font-mono-tech uppercase font-bold text-amber-700 block mb-2">STUDIO 03 • CENTRAL BAY</span>
+          <h3 class="text-2xl font-bold font-syne text-slate-900 mb-2">Robotics &amp; Autonomy</h3>
+          <p class="text-sm text-slate-600 leading-relaxed mb-4">
+            Terrestrial rovers, aerial drone telemetry, SLAM laser mapping, edge computer vision, and ROS-based autonomous navigation.
+          </p>
+          <div class="space-y-1.5 text-xs text-slate-700 font-mono-tech mb-6">
+            <div>• Voltera V-One PCB 3D Printer</div>
+            <div>• RPLiDAR 360° Laser Scanners</div>
+            <div>• NVIDIA Jetson Orin Nano AI Kits</div>
+            <div>• Indoor Drone Flight Test Cage</div>
+          </div>
+          <div class="text-xs font-mono-tech text-slate-500 pt-3 border-t border-slate-200">
+            Capacity: 36 Students • Extended Access (09:00 – 23:00)
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       5. FLAGSHIP BREAKTHROUGHS (CURATED 3 MARQUEE PROJECTS)
+       ========================================================================= -->
+  <section id="breakthroughs" class="py-24 border-b border-slate-200 bg-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <div>
+          <span class="text-xs font-mono-tech uppercase font-bold text-[#be1e2d] tracking-wider block mb-1">
+            RESEARCH &amp; PROTOTYPES
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-bold font-syne text-slate-900">
+            Flagship Engineering Breakthroughs.
+          </h2>
+        </div>
+        <p class="text-sm text-slate-600 max-w-md">
+          Multidisciplinary hardware systems engineered, fabricated, and field-tested by undergraduate engineering cohorts at TIET.
+        </p>
+      </div>
+
+      <!-- Marquee Projects (Clean Magazine Row Layout) -->
+      <div class="divide-y divide-slate-100 mb-12">
+        
+        <!-- THAR-eV -->
+        <div class="editorial-row py-8 cursor-pointer group flex flex-col md:flex-row md:items-start justify-between gap-6" onclick="openProjectModal('thar-ev')">
+          <div class="max-w-3xl">
+            <div class="flex items-center gap-3 mb-2 font-mono-tech text-xs text-slate-500">
+              <span class="text-[#0f2756] font-bold uppercase tracking-wider">Electric Mobility</span>
+              <span>•</span>
+              <span>Nov 2018 – Mar 2023</span>
+              <span>•</span>
+              <span>150+ Students Cohort</span>
+            </div>
+            <h3 class="text-2xl font-bold font-syne text-slate-900 group-hover:text-[#be1e2d] transition-colors leading-snug">
+              THAR-eV: Diesel-to-Electric Automotive Conversion
+            </h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              An interdisciplinary team of over 150 undergraduate students converted an internal combustion diesel Mahindra Thar into a 100% operational, road-tested electric vehicle with custom battery enclosures and motor controller systems.
+            </p>
+          </div>
+          <div class="shrink-0 flex items-center gap-2 text-xs font-mono-tech font-bold text-[#be1e2d] group-hover:translate-x-1 transition-transform self-start md:self-center">
+            <span>Inspect Dossier</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </div>
+        </div>
+
+        <!-- Autonomous Vehicle -->
+        <div class="editorial-row py-8 cursor-pointer group flex flex-col md:flex-row md:items-start justify-between gap-6" onclick="openProjectModal('autonomous-vehicle')">
+          <div class="max-w-3xl">
+            <div class="flex items-center gap-3 mb-2 font-mono-tech text-xs text-slate-500">
+              <span class="text-[#0f2756] font-bold uppercase tracking-wider">Robotics &amp; Autonomy</span>
+              <span>•</span>
+              <span>Jan 2019 – Present</span>
+              <span>•</span>
+              <span>Military Literature Festival Showcase</span>
+            </div>
+            <h3 class="text-2xl font-bold font-syne text-slate-900 group-hover:text-[#be1e2d] transition-colors leading-snug">
+              Outdoor Autonomous Vehicle Test System (Drive-by-Wire)
+            </h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              Custom-designed all-terrain outdoor autonomous vehicle test system capable of full drive-by-wire, steer-by-wire, and brake-by-wire actuation, running ROS navigation telemetry.
+            </p>
+          </div>
+          <div class="shrink-0 flex items-center gap-2 text-xs font-mono-tech font-bold text-[#be1e2d] group-hover:translate-x-1 transition-transform self-start md:self-center">
+            <span>Inspect Dossier</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </div>
+        </div>
+
+        <!-- ThaparSat Calibration Chamber -->
+        <div class="editorial-row py-8 cursor-pointer group flex flex-col md:flex-row md:items-start justify-between gap-6" onclick="openProjectModal('thaparsat')">
+          <div class="max-w-3xl">
+            <div class="flex items-center gap-3 mb-2 font-mono-tech text-xs text-slate-500">
+              <span class="text-[#0f2756] font-bold uppercase tracking-wider">Satellite Systems</span>
+              <span>•</span>
+              <span>Jan 2022 – Mar 2025</span>
+              <span>•</span>
+              <span>Space Systems Group</span>
+            </div>
+            <h3 class="text-2xl font-bold font-syne text-slate-900 group-hover:text-[#be1e2d] transition-colors leading-snug">
+              Pneumatic Calibration Chamber for ThaparSat Satellite Project
+            </h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              Optical gas simulator chamber engineered for laboratory ground calibration of the spectral camera payload onboard the ThaparSat satellite, featuring high-purity CO2 and CH4 gas flow.
+            </p>
+          </div>
+          <div class="shrink-0 flex items-center gap-2 text-xs font-mono-tech font-bold text-[#be1e2d] group-hover:translate-x-1 transition-transform self-start md:self-center">
+            <span>Inspect Dossier</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Global Competition Distinction Row -->
+      <div class="pt-8 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
+            <i data-lucide="award" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <span class="text-xs font-mono-tech uppercase font-bold text-amber-800">Global Competition Distinction</span>
+            <h4 class="text-base font-bold text-slate-900 mt-0.5">3rd Position Worldwide — Vertical Flight Society (VFS) 2025</h4>
+            <p class="text-xs text-slate-600 mt-0.5">Autonomous vertical takeoff vehicle developed and flight-tested in the ELC Robotics Maker Space.</p>
+          </div>
+        </div>
+        <button onclick="openActionModal('proposal')" class="shrink-0 text-xs font-mono-tech font-bold px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded transition-colors">
+          Propose Student Project →
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       6. 5-SEMESTER CURRICULAR PROGRESSION ARC (CONCISE OVERVIEW)
+       ========================================================================= -->
+  <section id="curriculum" class="py-24 border-b border-slate-200 bg-slate-50/50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      
+      <div class="max-w-3xl mb-12">
+        <span class="text-xs font-mono-tech uppercase font-bold text-[#be1e2d] tracking-wider block mb-1">
+          CURRICULAR FRAMEWORK
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-bold font-syne text-slate-900">
+          The 5-Semester Experiential Arc.
+        </h2>
+        <p class="text-sm text-slate-600 mt-2">
+          Embedded across all undergraduate branches: Computer Science, Chemical, Electronics &amp; Communication, and Electrical &amp; Instrumentation.
+        </p>
+      </div>
+
+      <!-- 5 Stages Timeline Flow -->
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <div class="pt-4 md:pt-0 md:pr-4">
+          <span class="text-xs font-mono-tech font-bold text-[#be1e2d] block mb-1">STAGE 01</span>
+          <h4 class="text-base font-bold text-slate-900 mb-1">Semester I</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Tools exploration, CAD basics, chemical PCB etching, thermodynamic air behavior, and Arduino motor control.
+          </p>
+        </div>
+
+        <div class="pt-4 md:pt-0 md:px-4">
+          <span class="text-xs font-mono-tech font-bold text-[#0f2756] block mb-1">STAGE 02</span>
+          <h4 class="text-base font-bold text-slate-900 mb-1">Semester II</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Multi-axis robotic arms, mobile application lifecycle, overhead storage tanks (378 m³), and OpenCV shape detection.
+          </p>
+        </div>
+
+        <div class="pt-4 md:pt-0 md:px-4">
+          <span class="text-xs font-mono-tech font-bold text-slate-700 block mb-1">STAGE 03</span>
+          <h4 class="text-base font-bold text-slate-900 mb-1">Semester III</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Edge &amp; cloud IoT, network firewall defense, textile dye adsorption, linear power supplies, and DC motor rewinding.
+          </p>
+        </div>
+
+        <div class="pt-4 md:pt-0 md:px-4">
+          <span class="text-xs font-mono-tech font-bold text-slate-700 block mb-1">STAGE 04</span>
+          <h4 class="text-base font-bold text-slate-900 mb-1">Semester IV</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Healthcare wearable machine learning, ethical hacking, industrial wastewater plants, and 4-DOF servo kinematics.
+          </p>
+        </div>
+
+        <div class="pt-4 md:pt-0 md:pl-4">
+          <span class="text-xs font-mono-tech font-bold text-amber-700 block mb-1">STAGE 05</span>
+          <h4 class="text-base font-bold text-slate-900 mb-1">Semester V</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Vision/voice telekinesis bots, Soxhlet oil extraction, FPGA HDL digital clocks on Xilinx Vivado, and switch-mode inverters.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="mt-12 pt-6 border-t border-slate-200 text-xs text-slate-500 font-mono-tech flex items-center justify-between">
+        <span>Detailed syllabi, lab rubrics, and apparatus manuals will be available in the dedicated Curriculum Portal.</span>
+        <span class="text-[#0f2756] font-bold">Curriculum Portal (Coming Soon) →</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       7. LEADERSHIP & COORDINATORS (DR. DUVEDI & DR. SAXENA)
+       ========================================================================= -->
+  <section id="leadership" class="py-24 border-b border-slate-200 bg-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      
+      <div class="max-w-3xl mb-12">
+        <span class="text-xs font-mono-tech uppercase font-bold text-[#be1e2d] tracking-wider block mb-1">
+          CENTRE GOVERNANCE
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-bold font-syne text-slate-900">
+          Centre Leadership.
+        </h2>
+        <p class="text-sm text-slate-600 mt-2">
+          Directing undergraduate experiential learning operations, interdisciplinary projects, and maker space safety protocols.
+        </p>
+      </div>
+
+      <!-- Core Leadership (Dr. Duvedi & Dr. Saxena) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+        
+        <!-- Dr. Ravinder Kumar Duvedi -->
+        <div class="flex flex-col sm:flex-row items-start gap-6">
+          <div class="w-32 h-32 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0 shadow-sm">
+            <img src="assets/faculty/leader_2.jpg" alt="Dr. Ravinder Kumar Duvedi" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <span class="text-xs font-mono-tech uppercase font-bold text-[#be1e2d]">Associate Dean – ELC</span>
+            <h3 class="text-xl font-bold font-syne text-slate-900 mt-1">Dr. Ravinder Kumar Duvedi</h3>
+            <p class="text-xs text-slate-600 mt-1">Professor — Department of Mechanical Engineering</p>
+            <p class="text-xs font-mono-tech text-slate-500 mt-0.5">rkduvedi@thapar.edu</p>
+            <p class="text-xs text-slate-600 mt-3 leading-relaxed">
+              Spearheading center operations since inception; mentored the THAR-eV vehicle conversion, Autonomous Buggy, ThaparSat satellite calibration chamber, and Jee-1 medical ventilator.
+            </p>
+          </div>
+        </div>
+
+        <!-- Dr. Sharad Saxena -->
+        <div class="flex flex-col sm:flex-row items-start gap-6">
+          <div class="w-32 h-32 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0 shadow-sm">
+            <img src="assets/faculty/leader_3.jpg" alt="Dr. Sharad Saxena" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <span class="text-xs font-mono-tech uppercase font-bold text-[#0f2756]">Coordinator – ELC</span>
+            <h3 class="text-xl font-bold font-syne text-slate-900 mt-1">Dr. Sharad Saxena</h3>
+            <p class="text-xs text-slate-600 mt-1">Associate Professor — Computer Science &amp; Engineering</p>
+            <p class="text-xs font-mono-tech text-slate-500 mt-0.5">sharad.saxena@thapar.edu</p>
+            <p class="text-xs text-slate-600 mt-3 leading-relaxed">
+              Directs computing integration, sensor telemetry systems, and international curriculum exchange programs (including UQ-STEP at the University of Queensland, Australia).
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Departmental Faculty Notice -->
+      <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between text-xs text-slate-500 font-mono-tech gap-2">
+        <span>Supported by dedicated faculty coordinators across Computer Science, Electronics, Electrical, Chemical, Civil, and Biotechnology.</span>
+        <span class="text-slate-800 font-bold">Foreman Instructor: Manoj Kumar</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       8. ACCESS & SAFETY CLEARANCE
+       ========================================================================= -->
+  <section class="py-24 bg-slate-900 text-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <div class="lg:col-span-7">
+          <span class="text-xs font-mono-tech uppercase text-rose-400 font-bold tracking-wider block mb-2">
+            OPERATING HOURS &amp; ACCESS
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-bold font-syne text-white mb-4">
+            Reserve Workbench Hours &amp; Equipment Clearance.
+          </h2>
+          <p class="text-slate-300 text-sm leading-relaxed mb-6 max-w-xl">
+            Located on the main Patiala campus, ELC provides extended access until 11:00 PM for enrolled undergraduate engineering students. Safety induction clearance is mandatory before operating CNC or high-voltage equipment.
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono-tech">
+            <div class="p-4 bg-slate-800 rounded">
+              <span class="text-slate-400 uppercase block mb-1 font-bold">Central Activity Spaces</span>
+              <span class="text-white font-bold text-sm block">09:00 AM – 11:00 PM IST</span>
+              <span class="text-slate-400 mt-1 block">Mon through Sat (Extended access)</span>
+            </div>
+            <div class="p-4 bg-slate-800 rounded">
+              <span class="text-slate-400 uppercase block mb-1 font-bold">Specialized Maker Studios</span>
+              <span class="text-white font-bold text-sm block">09:00 AM – 06:00 PM IST</span>
+              <span class="text-slate-400 mt-1 block">Supervised heavy machine hours</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-white text-slate-900 p-8 rounded-xl shadow-xl">
+          <h4 class="text-lg font-bold font-syne mb-2 text-slate-900">Student Project &amp; Clearance Desk</h4>
+          <p class="text-xs text-slate-600 mb-6 leading-relaxed">
+            Propose a student-led project, request specialized machinery time (Voltera 3D PCB, CNC Laser, or Dynamometer), or download safety forms.
+          </p>
+          <div class="space-y-3 font-mono-tech text-xs">
+            <button onclick="openActionModal('proposal')" class="w-full py-3 px-4 rounded bg-[#0f2756] hover:bg-[#0a1b3d] text-white font-semibold transition-colors flex items-center justify-center gap-2">
+              <span>Submit Project Proposal</span>
+              <i data-lucide="send" class="w-4 h-4"></i>
+            </button>
+            <button onclick="openActionModal('safety')" class="w-full py-3 px-4 rounded bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold transition-colors flex items-center justify-center gap-2">
+              <i data-lucide="download" class="w-4 h-4 text-slate-600"></i>
+              <span>Download Safety Protocol (PDF)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       9. INSTITUTIONAL FOOTER
+       ========================================================================= -->
+  <footer class="bg-white border-t border-slate-200 text-slate-600 text-xs py-14">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-4 mb-4">
+            <img src="assets/elc_logo.png" alt="ELC Logo" class="h-12 w-auto object-contain">
+            <img src="assets/thapar_official_logo.png" alt="Thapar Logo" class="h-8 w-auto object-contain opacity-90">
+          </div>
+          <p class="text-slate-600 leading-relaxed text-xs max-w-sm mb-3">
+            Thapar Institute of Engineering and Technology (TIET), Bhadson Road, Patiala, Punjab – 147004, India.
+          </p>
+          <div class="text-[11px] font-mono-tech text-slate-400">
+            Established January 2018 • Experiential Learning Centre.
+          </div>
+        </div>
+
+        <div>
+          <h5 class="text-slate-900 font-bold mb-3 font-mono-tech uppercase text-[11px]">Academic Programs</h5>
+          <ul class="space-y-2 text-xs">
+            <li><a href="#curriculum" class="hover:text-[#be1e2d] transition-colors">Computer Science &amp; Engineering</a></li>
+            <li><a href="#curriculum" class="hover:text-[#be1e2d] transition-colors">Electronics &amp; Communication</a></li>
+            <li><a href="#curriculum" class="hover:text-[#be1e2d] transition-colors">Electrical &amp; Instrumentation</a></li>
+            <li><a href="#curriculum" class="hover:text-[#be1e2d] transition-colors">Chemical Engineering</a></li>
+            <li><a href="#curriculum" class="hover:text-[#be1e2d] transition-colors">Civil &amp; Biotechnology</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h5 class="text-slate-900 font-bold mb-3 font-mono-tech uppercase text-[11px]">Direct Links</h5>
+          <ul class="space-y-2 text-xs">
+            <li><a href="https://www.thapar.edu" target="_blank" rel="noopener" class="hover:text-[#be1e2d] transition-colors">TIET Official Portal ↗</a></li>
+            <li><a href="#studios" class="hover:text-[#be1e2d] transition-colors">Maker Studio Machinery</a></li>
+            <li><a href="#breakthroughs" class="hover:text-[#be1e2d] transition-colors">Project Technical Dossiers</a></li>
+            <li><a href="#leadership" class="hover:text-[#be1e2d] transition-colors">Centre Leadership</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500 font-mono-tech">
+        <div>
+          © 2018–2026 Experiential Learning Centre, Thapar Institute of Engineering and Technology.
+        </div>
+        <div class="flex items-center gap-4">
+          <span>NAAC 'A+' Accredited</span>
+          <span>•</span>
+          <span>NIRF Top Tier</span>
+          <span>•</span>
+          <span>Washington Accord Aligned</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       MODAL: TECHNICAL PROJECT DOSSIER
+       ========================================================================= -->
+  <div id="project-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-8 shadow-2xl border border-slate-200 relative max-h-[90vh] overflow-y-auto">
+      <div id="project-modal-body">
+        <!-- Rendered by js/app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: ACTION & PROPOSAL DIALOG
+       ========================================================================= -->
+  <div id="action-dialog-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl border border-slate-200 relative">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-200">
+        <h3 id="action-dialog-title" class="text-lg font-bold font-syne text-slate-900">Inquiry Desk</h3>
+        <button onclick="closeActionModal()" class="text-slate-400 hover:text-slate-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+        Directly connected with the ELC Coordinator's Office (Dr. R.K. Duvedi &amp; Dr. Sharad Saxena). Submissions verified within 24 hours.
+      </p>
+      <form onsubmit="event.preventDefault(); alert('Inquiry recorded. The ELC Coordinator office will reach out to your thapar.edu email.'); closeActionModal();" class="space-y-3 text-xs font-mono-tech">
+        <div>
+          <label class="block text-slate-600 mb-1">Student / Faculty Name</label>
+          <input type="text" required placeholder="e.g. Arjun Sharma" class="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-[#0f2756]">
+        </div>
+        <div>
+          <label class="block text-slate-600 mb-1">Thapar Institutional Email</label>
+          <input type="email" required placeholder="name@thapar.edu" class="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-[#0f2756]">
+        </div>
+        <div>
+          <label class="block text-slate-600 mb-1">Target Maker Studio</label>
+          <select class="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-[#0f2756] bg-white">
+            <option>Mechanical Fabrication Studio (CNC Laser / Welding / Bending)</option>
+            <option>Electrical &amp; Embedded Systems (PCB / FPGA / Weller Stations)</option>
+            <option>Robotics &amp; Autonomous Systems (Voltera 3D / ROS Buggies)</option>
+            <option>Summer Research Fellowship Inquiry</option>
+          </select>
+        </div>
+        <div class="pt-2">
+          <button type="submit" class="w-full py-2.5 bg-[#0f2756] hover:bg-[#0a1b3d] text-white font-semibold rounded transition-colors">
+            Confirm &amp; Transmit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/canvas-ambient.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

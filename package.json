@@ -1,0 +1,19 @@
+{
+  "name": "thapar-elc-homepage",
+  "version": "1.0.0",
+  "description": "Official Homepage for Experiential Learning Centre (ELC), Thapar Institute of Engineering and Technology (TIET), Patiala",
+  "scripts": {
+    "start": "npx serve . -l 3000",
+    "dev": "npx serve . -l 3000"
+  },
+  "keywords": [
+    "thapar",
+    "elc",
+    "experiential-learning",
+    "tiet",
+    "engineering"
+  ],
+  "author": "Experiential Learning Centre, TIET Patiala",
+  "license": "UNLICENSED"
+}
+
