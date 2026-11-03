@@ -755,17 +755,15 @@
       const path = wrap.querySelector('.studio-wave-path');
       if (!path) return;
 
-      path.style.transition = 'none';
-      path.style.strokeDashoffset = '1';
-      void path.getBoundingClientRect();
-      path.style.transition = 'stroke-dashoffset 700ms cubic-bezier(0.2, 0.7, 0.2, 1)';
-      path.style.strokeDashoffset = '0';
+      path.style.animation = 'none';
+      void path.offsetWidth; // Force reflow to immediately restart redraw animation
+      path.style.animation = 'waveDividerRedraw 700ms cubic-bezier(0.2, 0.7, 0.2, 1)';
     }
 
     dividers.forEach((svg) => drawWave(svg));
     window.addEventListener('resize', () => dividers.forEach((svg) => drawWave(svg)), { passive: true });
 
-    // 1. Direct hover on ANY waveform divider (including top sawtooth graph)
+    // 1. Direct hover on ANY waveform divider
     const dividerWraps = document.querySelectorAll('.studio-divider-wrap');
     dividerWraps.forEach((wrap) => {
       wrap.addEventListener('mouseenter', () => {
@@ -773,16 +771,16 @@
       });
     });
 
-    // 2. Hover on a studio row triggers its corresponding top divider
+    // 2. Hover on a studio row triggers its respective divider directly below it
     studioRows.forEach((row) => {
       row.addEventListener('mouseenter', () => {
         if (prefersReducedMotion) return;
-        let prev = row.previousElementSibling;
-        while (prev && !prev.classList.contains('studio-divider-wrap')) {
-          prev = prev.previousElementSibling;
+        let next = row.nextElementSibling;
+        while (next && !next.classList.contains('studio-divider-wrap')) {
+          next = next.nextElementSibling;
         }
-        if (prev) {
-          triggerWaveRedraw(prev);
+        if (next) {
+          triggerWaveRedraw(next);
         }
       });
     });

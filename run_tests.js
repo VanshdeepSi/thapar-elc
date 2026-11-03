@@ -460,9 +460,9 @@ async function runAllTests() {
       const diff = Math.abs(positions.markerCenterY - positions.labelCenterY);
       console.log(`Scroll Y=${sY}px: Marker center=${positions.markerCenterY.toFixed(1)}px, Label center=${positions.labelCenterY.toFixed(1)}px, Diff=${diff.toFixed(1)}px (Index=${positions.indexText})`);
 
-      // Label must be vertically aligned with the red dot within 8px
-      if (diff > 8) {
-        console.error(`FAIL at scrollY=${sY}px: Label and marker vertical desync (${diff.toFixed(1)}px)`);
+      // Label must be on the EXACT same level as the red dot (diff <= 2px)
+      if (diff > 2) {
+        console.error(`FAIL at scrollY=${sY}px: Label and marker not on same level (${diff.toFixed(1)}px)`);
         spineMovePassed = false;
       }
     }
@@ -474,12 +474,83 @@ async function runAllTests() {
     });
     console.log(`Initial label top: ${initialLabelTop.toFixed(1)}px, Final label top at Y=2400px: ${finalLabelPos.toFixed(1)}px`);
     if (Math.abs(finalLabelPos - initialLabelTop) > 100 && spineMovePassed) {
-      console.log('PASS: Page number moves smoothly with red dot across all scroll depths');
+      console.log('PASS: Page number moves on the EXACT same horizontal level as the red dot');
     } else {
-      console.error('FAIL: Page number did not move with red dot');
+      console.error('FAIL: Page number level or movement check failed');
       allPassed = false;
     }
     await ctxSpineMove.close();
+
+    // -------------------------------------------------------------------------
+    // TEST 10: WAVE DIVIDERS BELOW RESPECTIVE STUDIOS & HOVER REDRAW
+    // -------------------------------------------------------------------------
+    console.log('\n--- TEST 10: WAVE DIVIDERS BELOW STUDIOS & HOVER REDRAW ---');
+    const ctxWave = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const pageWave = await ctxWave.newPage();
+    await pageWave.goto('http://localhost:5173/', { waitUntil: 'networkidle' });
+    await pageWave.evaluate(() => {
+      document.documentElement.style.scrollBehavior = 'auto';
+    });
+
+    const waveOrder = await pageWave.evaluate(() => {
+      const rows = Array.from(document.querySelectorAll('.studio-row'));
+      return rows.map((r) => {
+        let next = r.nextElementSibling;
+        while (next && !next.classList.contains('studio-divider-wrap')) {
+          next = next.nextElementSibling;
+        }
+        const svg = next ? next.querySelector('.studio-wave-divider') : null;
+        return {
+          studioId: r.getAttribute('aria-labelledby'),
+          hasDividerBelow: !!next,
+          waveType: svg ? svg.getAttribute('data-wave') : null
+        };
+      });
+    });
+
+    console.log('Wave dividers relative to studio rows:', waveOrder);
+    const expectedWaves = ['sawtooth', 'sine', 'pwm'];
+    const orderCorrect = waveOrder.length === 3 && waveOrder.every((w, idx) => w.hasDividerBelow && w.waveType === expectedWaves[idx]);
+
+    if (orderCorrect) {
+      console.log('PASS: Studio 01 is followed by Sawtooth, Studio 02 by Sine, Studio 03 by PWM');
+    } else {
+      console.error('FAIL: Waveform divider ordering incorrect:', waveOrder);
+      allPassed = false;
+    }
+
+    // Scroll to studios section and hover each row to verify animation is triggered
+    await pageWave.evaluate(() => {
+      document.getElementById('studios').scrollIntoView();
+    });
+    await pageWave.waitForTimeout(100);
+
+    const rows = await pageWave.$$('.studio-row');
+    for (let i = 0; i < rows.length; i++) {
+      await rows[i].hover();
+      await pageWave.waitForTimeout(50);
+      const animState = await pageWave.evaluate((idx) => {
+        const rowList = document.querySelectorAll('.studio-row');
+        const targetRow = rowList[idx];
+        let next = targetRow.nextElementSibling;
+        while (next && !next.classList.contains('studio-divider-wrap')) {
+          next = next.nextElementSibling;
+        }
+        const path = next ? next.querySelector('.studio-wave-path') : null;
+        const style = path ? window.getComputedStyle(path) : null;
+        return {
+          animationName: style ? style.animationName : null
+        };
+      }, i);
+      console.log(`Hovered studio row ${i + 1}: divider below has animationName="${animState.animationName}"`);
+      if (animState.animationName && animState.animationName.includes('waveDividerRedraw')) {
+        console.log(`PASS: Studio ${i + 1} hover triggers wave animation below it`);
+      } else {
+        console.error(`FAIL: Studio ${i + 1} hover did not trigger wave animation`);
+        allPassed = false;
+      }
+    }
+    await ctxWave.close();
 
   } catch (err) {
     console.error('ERROR running tests:', err);
