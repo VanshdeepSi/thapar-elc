@@ -746,29 +746,40 @@
       path.style.strokeDashoffset = '0';
     }
 
+    function triggerWaveRedraw(wrap) {
+      if (prefersReducedMotion || !wrap) return;
+      const path = wrap.querySelector('.studio-wave-path');
+      if (!path) return;
+
+      path.style.transition = 'none';
+      path.style.strokeDashoffset = '1';
+      void path.getBoundingClientRect();
+      path.style.transition = 'stroke-dashoffset 700ms cubic-bezier(0.2, 0.7, 0.2, 1)';
+      path.style.strokeDashoffset = '0';
+    }
+
     dividers.forEach((svg) => drawWave(svg));
     window.addEventListener('resize', () => dividers.forEach((svg) => drawWave(svg)), { passive: true });
 
-    // Redraw on hover (700ms from 1 to 0 dashoffset) and never hide it
+    // 1. Direct hover on ANY waveform divider (including top sawtooth graph)
+    const dividerWraps = document.querySelectorAll('.studio-divider-wrap');
+    dividerWraps.forEach((wrap) => {
+      wrap.addEventListener('mouseenter', () => {
+        triggerWaveRedraw(wrap);
+      });
+    });
+
+    // 2. Hover on a studio row triggers its corresponding top divider
     studioRows.forEach((row) => {
       row.addEventListener('mouseenter', () => {
         if (prefersReducedMotion) return;
-        const prevWrap = row.previousElementSibling;
-        const nextWrap = row.nextElementSibling;
-        const wrap = (nextWrap && nextWrap.classList.contains('studio-divider-wrap'))
-          ? nextWrap
-          : (prevWrap && prevWrap.classList.contains('studio-divider-wrap'))
-            ? prevWrap
-            : null;
-        if (!wrap) return;
-        const path = wrap.querySelector('.studio-wave-path');
-        if (!path) return;
-
-        path.style.transition = 'none';
-        path.style.strokeDashoffset = '1';
-        void path.getBoundingClientRect();
-        path.style.transition = 'stroke-dashoffset 700ms cubic-bezier(0.2, 0.7, 0.2, 1)';
-        path.style.strokeDashoffset = '0';
+        let prev = row.previousElementSibling;
+        while (prev && !prev.classList.contains('studio-divider-wrap')) {
+          prev = prev.previousElementSibling;
+        }
+        if (prev) {
+          triggerWaveRedraw(prev);
+        }
       });
     });
   }

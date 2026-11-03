@@ -1055,8 +1055,9 @@ p, .body-copy {
 .studio-divider-wrap {
   position: relative;
   width: 100%;
-  pointer-events: none;
-  padding: 8px 0;
+  padding: 10px 0;
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .studio-wave-divider {
@@ -1077,6 +1078,12 @@ p, .body-copy {
 }
 
 @media (hover: hover) {
+  .studio-divider-wrap:hover .studio-wave-path {
+    animation: waveDividerRedraw 700ms var(--ease-trace) forwards;
+  }
+  .studio-divider-wrap:hover .studio-divider-label {
+    color: var(--brand-red);
+  }
   .studio-row:hover .studio-wave-path,
   .studio-row:hover + .studio-divider-wrap .studio-wave-path {
     animation: waveDividerRedraw 700ms var(--ease-trace) forwards;

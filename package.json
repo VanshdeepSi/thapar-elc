@@ -1,31 +1,12 @@
 {
   "name": "thapar-elc-homepage",
   "version": "1.0.0",
+  "private": true,
   "description": "Official Homepage for Experiential Learning Centre (ELC), Thapar Institute of Engineering and Technology (TIET), Patiala",
   "scripts": {
-    "start": "npx serve . -l 3000",
-    "dev": "npx serve . -l 3000"
+    "test": "node run_tests.js"
   },
-  "keywords": [
-    "thapar",
-    "elc",
-    "experiential-learning",
-    "tiet",
-    "engineering"
-  ],
-  "author": "Experiential Learning Centre, TIET Patiala",
-  "license": "UNLICENSED",
-  "main": "run_tests.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/VanshdeepSi/thapar-elc.git"
-  },
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/VanshdeepSi/thapar-elc/issues"
-  },
-  "homepage": "https://github.com/VanshdeepSi/thapar-elc#readme",
-  "dependencies": {
+  "devDependencies": {
     "playwright": "^1.64.1"
   }
 }
