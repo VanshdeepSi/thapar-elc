@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ELC Portal | Experiential Learning Centre TIET</title>
+    <script type="module" crossorigin src="/assets/index-HlOWlrY_.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CCNb7n13.css">
+  </head>
+  <body>
+    <div id="root"></div>
+        <script>
+      // Clear any rogue service workers from other projects on localhost
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for (var registration of registrations) {
+            registration.unregister();
+            console.log('Unregistered rogue service worker from localhost:', registration);
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
