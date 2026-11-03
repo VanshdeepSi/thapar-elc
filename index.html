@@ -25,7 +25,7 @@
   <!-- Mobile Scroll Progress Indicator (2px Top Bar) -->
   <div id="traceMobileBar" class="trace-mobile-bar" aria-hidden="true"></div>
 
-  <!-- Desktop Vertical Spine Navigation (1180px+) -->
+  <!-- Desktop Vertical Spine Navigation (containerLeft - 40px, >= 1280px) -->
   <aside id="traceSpine" class="trace-spine" aria-hidden="true">
     <div id="spineMarker" class="spine-marker">
       <span id="spineLabel" class="spine-node-label font-mono">01 OVERVIEW</span>
@@ -33,7 +33,7 @@
   </aside>
 
   <!-- =========================================================================
-       1. HEADER
+       1. HEADER (72PX TALL, LOGOS 44-48PX, OUTLINE BUTTON NEVER CLIPPED)
        ========================================================================= -->
   <header class="site-header" role="banner">
     <div class="site-container">
@@ -56,7 +56,7 @@
           <a href="#contact" class="nav-link">Contact</a>
         </nav>
 
-        <!-- Single Header Action: Outline Button "Visit the lab" -->
+        <!-- Header Action: Outline Button "Visit the lab" -->
         <div class="header-actions">
           <a href="#contact" class="btn-outline">Visit the lab</a>
           <button id="mobileNavToggle" class="mobile-nav-toggle" aria-label="Open mobile navigation menu" aria-expanded="false">
@@ -86,139 +86,110 @@
   <main id="main-content">
 
     <!-- =========================================================================
-         2. HERO SECTION
+         2. HERO SECTION (100SVH, ABOVE THE FOLD AT 1440X900)
          ========================================================================= -->
     <section id="hero" class="hero-section" aria-labelledby="hero-title">
       <div class="site-container">
-        <div class="hero-grid">
-          
-          <div class="hero-text-block">
-            <span class="hero-eyebrow font-mono">Experiential Learning Centre, TIET Patiala</span>
-            <h1 id="hero-title" class="hero-title font-display">Build it before you graduate</h1>
-            <p class="hero-lead font-body">
-              Undergraduate engineering at Thapar Institute embeds open design challenges directly into the curriculum. From first-year circuit synthesis to senior flight and powertrain testing, student teams engineer physical hardware in dedicated campus workshops.
-            </p>
-            <div class="hero-cta-group">
-              <a href="#studios" class="btn-primary">Explore the studios</a>
-              <a href="#projects" class="link-editorial">Read the projects</a>
-            </div>
+        
+        <div class="hero-main-content">
+          <span class="hero-eyebrow font-mono">Experiential Learning Centre, TIET Patiala</span>
+          <h1 id="hero-title" class="hero-title font-display">Build it before you graduate</h1>
+          <p class="hero-lead font-body">
+            ELC is Thapar's open workshop. From the first semester, students build real hardware (circuits, powertrains, robots, a satellite calibration chamber) in three studios on campus.
+          </p>
+          <div class="hero-cta-group">
+            <a href="#studios" class="btn-primary">Explore the studios</a>
+            <a href="#projects" class="link-editorial">Read the projects</a>
           </div>
-
-          <!-- Full-Width Photo Slot Placeholder -->
-          <div class="photo-slot-wrapper hero-photo-slot" role="img" aria-label="Students working on mechanical and electronic hardware at a B119 workbench">
-            <div class="photo-slot-content">
-              <span class="photo-slot-tag font-mono">[REPLACE: students at a B119 workbench]</span>
-              <span class="photo-slot-caption font-body">Undergraduate engineering teams fabricating structural components and embedded systems in central lab wings</span>
-            </div>
-          </div>
-
-          <!-- Verified Stats (Max 3, clean lining figures, no red chips) -->
-          <!-- TODO: verify exact current workbench count with lab coordinator -->
-          <div class="hero-stats-row" aria-label="Key Laboratory Metrics">
-            <div class="stat-item">
-              <span class="stat-figure font-display">240</span>
-              <span class="stat-label font-body">Concurrent workbenches</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-figure font-display">03</span>
-              <span class="stat-label font-body">Fabrication studios</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-figure font-display">2018</span>
-              <span class="stat-label font-body">Year established</span>
-            </div>
-          </div>
-
         </div>
+
       </div>
 
-      <!-- Hero Wave Canvas ("The Trace" Animation 1) -->
-      <div class="hero-wave-container" aria-hidden="true">
+      <!-- Hero Signature Scene: "THE TRACE" (Wave + 4x4 Car + Rocket Launch Pad) -->
+      <div class="hero-signature-scene" aria-label="Interactive harmonics waveform and engineering mechanism animation">
         <canvas id="heroWaveCanvas"></canvas>
       </div>
     </section>
 
     <!-- =========================================================================
-         3. WHAT ELC IS & SEMESTER ASCENT TRAJECTORY
+         3. STATS & HERO PHOTO BENCH (MOVED BELOW THE FOLD)
          ========================================================================= -->
-    <section id="curriculum" class="overview-section" aria-labelledby="overview-heading">
+    <section class="stats-banner-section" aria-label="Key Laboratory Metrics and Central Workspace">
       <div class="site-container">
-        <div class="overview-grid">
-          
-          <div class="overview-copy-block">
-            <span class="data-tag font-mono accent">CURRICULAR INTEGRATION</span>
-            <h2 id="overview-heading" class="section-heading font-display">A five-semester engineering progression</h2>
-            <p class="body-copy">
-              The Experiential Learning Centre is Thapar Institute's core engineering proving ground, operating 60 central power workbenches and three specialized maker studios. Here, engineering undergraduates advance beyond simulated models to design, mill, solder, and deploy operational machines across their degree.
-            </p>
-            <p class="body-copy">
-              Every undergraduate discipline completes required experiential coursework each term, moving systematically from fundamental hand tools to complex multi-disciplinary systems before capstone execution.
-            </p>
-            <div style="padding-top: 8px;">
-              <a href="#projects" class="link-editorial">Read the project milestones</a>
+        
+        <!-- Verified Stats (Max 3, clean lining figures, no red chips) -->
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-figure font-display">3</span>
+            <span class="stat-label font-body">Studios on campus</span>
+          </div>
+
+          <!-- TODO: confirm with ELC regarding exact current concurrent student capacity in central spaces -->
+          <div class="stat-item">
+            <span class="stat-figure font-display">240</span>
+            <span class="stat-label font-body">Students can work at once in the central spaces</span>
+          </div>
+
+          <div class="stat-item">
+            <span class="stat-figure font-display">3rd</span>
+            <span class="stat-label font-body">Worldwide, Vertical Flight Society 2025</span>
+          </div>
+        </div>
+
+        <!-- Hero Technical Plate: Central Workbench Prototyping Bay -->
+        <div class="technical-plate-container hero-plate-aspect" role="img" aria-label="Technical architectural drawing of central workbench assembly bay in Block B119">
+          <div class="technical-plate-drawing">
+            <svg class="plate-svg-art" viewBox="0 0 800 280">
+              <!-- Grid background lines -->
+              <line x1="40" y1="230" x2="760" y2="230" stroke="#0F2756" stroke-width="1.5" />
+              <!-- Workbench stations -->
+              <rect x="80" y="160" width="180" height="70" stroke-width="1.25" />
+              <line x1="80" y1="190" x2="260" y2="190" stroke-dasharray="4 4" />
+              <rect x="310" y="160" width="180" height="70" stroke-width="1.25" />
+              <line x1="310" y1="190" x2="490" y2="190" stroke-dasharray="4 4" />
+              <rect x="540" y="160" width="180" height="70" stroke-width="1.25" />
+              <line x1="540" y1="190" x2="720" y2="190" stroke-dasharray="4 4" />
+              <!-- Overhead power drops -->
+              <line x1="170" y1="20" x2="170" y2="160" stroke-width="1.25" />
+              <circle cx="170" cy="140" r="6" />
+              <line x1="400" y1="20" x2="400" y2="160" stroke-width="1.25" />
+              <circle cx="400" cy="140" r="6" />
+              <line x1="630" y1="20" x2="630" y2="160" stroke-width="1.25" />
+              <circle cx="630" cy="140" r="6" />
+              <!-- Oscilloscope outline on bench 2 -->
+              <rect x="340" y="125" width="45" height="35" />
+              <rect x="345" y="130" width="22" height="18" />
+              <!-- Soldering station on bench 1 -->
+              <rect x="110" y="138" width="30" height="22" />
+              <line x1="140" y1="150" x2="160" y2="155" />
+            </svg>
+            <div class="plate-title-block font-mono">
+              <span class="fig-id">FIG. 01 &middot; CENTRAL B119 WORKBENCH BAYS</span>
+              <span>DWG: ELC-B119-01 &middot; SCALE: 1:25</span>
+              <span>TIET PATIALA</span>
             </div>
           </div>
 
-          <!-- Semester Ascent Curve Component ("The Trace" Animation 5) -->
-          <div id="ascentCurveCard" class="ascent-curve-card" aria-label="Five-semester engineering ascent curve">
-            <div class="ascent-curve-header">
-              <span class="data-tag font-mono">ASCENT TRAJECTORY · SEMESTER 1 TO 5</span>
-              <span class="data-tag font-mono accent">CREDIT INTEGRATED</span>
-            </div>
+          <!-- Real photo overlay (fades in automatically when image dropped in /public/images/) -->
+          <img src="images/hero-workbench.jpg" alt="Students fabricating prototypes at B119 central workbenches" class="photo-overlay" onerror="this.style.opacity='0'; this.style.pointerEvents='none';" onload="this.classList.add('loaded');">
+        </div>
 
-            <div class="ascent-curve-svg-wrap">
-              <svg id="ascentCurveSvg" viewBox="0 0 600 200" fill="none" preserveAspectRatio="none">
-                <!-- Hairline coordinate grid -->
-                <line x1="0" y1="180" x2="600" y2="180" stroke="#E2DDD5" stroke-width="1" />
-                <line x1="0" y1="20" x2="600" y2="20" stroke="#ECE7DF" stroke-width="1" stroke-dasharray="4 4" />
-                <line x1="0" y1="100" x2="600" y2="100" stroke="#ECE7DF" stroke-width="1" stroke-dasharray="4 4" />
+      </div>
+    </section>
 
-                <!-- Stage Tick Markers -->
-                <line x1="50" y1="175" x2="50" y2="185" stroke="#0F2756" stroke-width="1.5" />
-                <line x1="175" y1="175" x2="175" y2="185" stroke="#0F2756" stroke-width="1.5" />
-                <line x1="300" y1="175" x2="300" y2="185" stroke="#0F2756" stroke-width="1.5" />
-                <line x1="425" y1="175" x2="425" y2="185" stroke="#0F2756" stroke-width="1.5" />
-                <line x1="550" y1="175" x2="550" y2="185" stroke="#0F2756" stroke-width="1.5" />
-
-                <!-- Base Inactive Ascent Trajectory Curve (Steep, then flattening) -->
-                <path id="ascentPath" d="M 20 180 C 140 178, 200 90, 360 48 C 450 26, 520 22, 580 20" stroke="rgba(15, 39, 86, 0.2)" stroke-width="2" />
-
-                <!-- Active Trailing Path (Drawn on scroll) -->
-                <path id="ascentTrail" d="M 20 180 C 140 178, 200 90, 360 48 C 450 26, 520 22, 580 20" stroke="#0F2756" stroke-width="2.5" />
-
-                <!-- Red Marker with Tangent Arrow -->
-                <g id="ascentMarker">
-                  <circle cx="0" cy="0" r="5" fill="#BE1E2D" />
-                  <circle cx="0" cy="0" r="9" stroke="rgba(190, 30, 45, 0.3)" stroke-width="1" />
-                  <line x1="-8" y1="0" x2="8" y2="0" stroke="#BE1E2D" stroke-width="1.5" />
-                </g>
-              </svg>
-            </div>
-
-            <!-- 5 Ascent Stage Milestone Labels -->
-            <div class="ascent-stages-grid">
-              <div class="ascent-stage-item">
-                <span class="ascent-stage-sem">SEM 01</span>
-                <span class="ascent-stage-name font-body">Cornerstone Design</span>
-              </div>
-              <div class="ascent-stage-item">
-                <span class="ascent-stage-sem">SEM 02</span>
-                <span class="ascent-stage-name font-body">Systems Integration</span>
-              </div>
-              <div class="ascent-stage-item">
-                <span class="ascent-stage-sem">SEM 03</span>
-                <span class="ascent-stage-name font-body">Mechatronics &amp; Power</span>
-              </div>
-              <div class="ascent-stage-item">
-                <span class="ascent-stage-sem">SEM 04</span>
-                <span class="ascent-stage-name font-body">Prototype Testing</span>
-              </div>
-              <div class="ascent-stage-item">
-                <span class="ascent-stage-sem">SEM 05</span>
-                <span class="ascent-stage-name font-body">Capstone Synthesis</span>
-              </div>
-            </div>
-
+    <!-- =========================================================================
+         4. WHAT ELC IS (EXACTLY 2 SENTENCES, NO REPEATING WORKBENCH PARAGRAPHS)
+         ========================================================================= -->
+    <section id="overview" class="overview-section" aria-labelledby="overview-heading">
+      <div class="site-container">
+        <div class="overview-grid">
+          
+          <div>
+            <span class="data-tag font-mono accent">CENTRE CHARTER</span>
+            <h2 id="overview-heading" class="section-heading font-display" style="margin-top: 0.5rem; margin-bottom: 1.25rem;">Hands-on physical engineering</h2>
+            <p class="body-copy">
+              The Experiential Learning Centre is Thapar Institute's core engineering proving ground, operating three specialized maker studios. Here, engineering undergraduates advance beyond simulated models to design, mill, solder, and deploy operational machines across their degree.
+            </p>
           </div>
 
         </div>
@@ -226,101 +197,250 @@
     </section>
 
     <!-- =========================================================================
-         4. STUDIOS SECTION (THREE DISTINCT EDITORIAL ROWS, NO CARDS)
+         5. SEMESTERS SECTION (NO DASHBOARD CARD, FULL-WIDTH ASCENT CURVE)
+         ========================================================================= -->
+    <section id="curriculum" class="semesters-section" aria-labelledby="curriculum-heading">
+      <div class="site-container">
+        
+        <div>
+          <span class="data-tag font-mono accent">NON-CREDIT DESIGN CURRICULUM</span>
+          <h2 id="curriculum-heading" class="section-heading font-display" style="margin-top: 0.5rem; margin-bottom: 0.75rem;">Five semesters of machine building</h2>
+          <p class="body-copy">
+            Every undergraduate discipline completes required experiential coursework each term, moving systematically from basic hand tools to advanced multi-disciplinary robotics and power systems.
+          </p>
+        </div>
+
+        <!-- Full-Width Ascent Curve (No Dashboard Box) -->
+        <div class="ascent-curve-fullwidth" aria-label="Five semester learning velocity ascent trajectory">
+          
+          <div class="ascent-curve-svg-wrap">
+            <svg id="ascentCurveSvg" viewBox="0 0 1000 180" preserveAspectRatio="none">
+              <!-- Coordinate reference hairlines -->
+              <line x1="0" y1="160" x2="1000" y2="160" stroke="#E2DDD5" stroke-width="1" />
+              <line x1="0" y1="80" x2="1000" y2="80" stroke="#ECE7DF" stroke-width="1" stroke-dasharray="4 4" />
+              <line x1="0" y1="20" x2="1000" y2="20" stroke="#ECE7DF" stroke-width="1" stroke-dasharray="4 4" />
+
+              <!-- Stage Separation Ticks (Sem I to V) -->
+              <line class="ascent-stage-tick" x1="100" y1="150" x2="100" y2="170" stroke="#0F2756" stroke-width="1.5" />
+              <line class="ascent-stage-tick" x1="300" y1="150" x2="300" y2="170" stroke="#0F2756" stroke-width="1.5" />
+              <line class="ascent-stage-tick" x1="500" y1="150" x2="500" y2="170" stroke="#0F2756" stroke-width="1.5" />
+              <line class="ascent-stage-tick" x1="700" y1="150" x2="700" y2="170" stroke="#0F2756" stroke-width="1.5" />
+              <line class="ascent-stage-tick" x1="900" y1="150" x2="900" y2="170" stroke="#0F2756" stroke-width="1.5" />
+
+              <!-- Inactive Base Ascent Curve (Steep rise, then flattening) -->
+              <path id="ascentPath" d="M 40 160 C 220 156, 320 85, 580 42 C 720 22, 850 18, 960 18" stroke="rgba(15, 39, 86, 0.22)" stroke-width="2" fill="none" />
+
+              <!-- Active Trailing Path (Redrawn on scroll) -->
+              <path id="ascentTrail" d="M 40 160 C 220 156, 320 85, 580 42 C 720 22, 850 18, 960 18" stroke="#0F2756" stroke-width="2.5" fill="none" />
+
+              <!-- Small Red Rocket Glyph (Climbs with scroll and rotates along tangent) -->
+              <g id="ascentRocketGlyph">
+                <!-- Rocket fuselage pointing forward -->
+                <path d="M 0 -12 L 4 -4 L 4 6 L 2 9 L -2 9 L -4 6 L -4 -4 Z" fill="#BE1E2D" />
+                <!-- Fins -->
+                <path d="M -4 2 L -8 8 L -4 7 Z" fill="#BE1E2D" />
+                <path d="M 4 2 L 8 8 L 4 7 Z" fill="#BE1E2D" />
+                <!-- Engine dot -->
+                <circle cx="0" cy="11" r="1.5" fill="#BE1E2D" opacity="0.75" />
+              </g>
+            </svg>
+          </div>
+
+          <!-- Five Stage Milestones (SOURCE CONTENT: Inactive ~60% ink, >= 4.5:1 contrast) -->
+          <div class="ascent-stages-grid">
+            
+            <div class="ascent-stage-item">
+              <span class="ascent-stage-sem">SEM I</span>
+              <h3 class="ascent-stage-title">Fundamental Tools</h3>
+              <p class="ascent-stage-topics">Tools, CAD, chemical PCB etching, Arduino motor control.</p>
+            </div>
+
+            <div class="ascent-stage-item">
+              <span class="ascent-stage-sem">SEM II</span>
+              <h3 class="ascent-stage-title">Robotics &amp; Vision</h3>
+              <p class="ascent-stage-topics">Multi-axis robotic arms, mobile app lifecycle, OpenCV.</p>
+            </div>
+
+            <div class="ascent-stage-item">
+              <span class="ascent-stage-sem">SEM III</span>
+              <h3 class="ascent-stage-title">Systems &amp; Power</h3>
+              <p class="ascent-stage-topics">Edge/cloud IoT, firewall defense, linear power supplies, DC motor rewinding.</p>
+            </div>
+
+            <div class="ascent-stage-item">
+              <span class="ascent-stage-sem">SEM IV</span>
+              <h3 class="ascent-stage-title">Kinematics &amp; ML</h3>
+              <p class="ascent-stage-topics">Wearable ML, ethical hacking, 4-DOF servo kinematics.</p>
+            </div>
+
+            <div class="ascent-stage-item">
+              <span class="ascent-stage-sem">SEM V</span>
+              <h3 class="ascent-stage-title">Advanced Synthesis</h3>
+              <p class="ascent-stage-topics">FPGA HDL clocks, switch-mode inverters, vision/voice robots.</p>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div style="padding-top: 2.5rem;">
+          <a href="#curriculum" class="link-editorial">See the five semesters</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         6. STUDIOS SECTION (ROW DIVIDER IS THE WAVEFORM)
          ========================================================================= -->
     <section id="studios" class="studios-section" aria-labelledby="studios-heading">
       <div class="site-container">
         
-        <div class="section-header-block">
-          <span class="data-tag font-mono accent">LABORATORY WINGS</span>
-          <h2 id="studios-heading" class="section-heading font-display">Specialized maker studios</h2>
-          <p class="body-copy" style="margin-top: 0.75rem;">
-            Three dedicated workshop wings accommodate distinct fabrication domains. Detailed machine tooling, capacity limits, and operating hours are listed on the dedicated Studios specification index.
+        <div style="margin-bottom: 2rem;">
+          <span class="data-tag font-mono accent">WORKSHOP WINGS</span>
+          <h2 id="studios-heading" class="section-heading font-display" style="margin-top: 0.5rem; margin-bottom: 0.75rem;">Specialized maker studios</h2>
+          <p class="body-copy">
+            Three dedicated studios accommodate distinct engineering domains across Block B and Central Bay.
           </p>
         </div>
 
-        <div class="studios-list" role="list">
+        <div class="studios-list">
           
-          <!-- Studio Row 1: Mechanical Fabrication (Sawtooth Torque Waveform) -->
-          <article class="studio-row" role="listitem">
-            <div class="studio-photo-slot">
-              <span class="data-tag font-mono">[REPLACE: CNC milling, lathe bays, and waterjet cutter in B119]</span>
+          <!-- Waveform Row Divider: Sawtooth Torque Curve (Full Width, Whole Cycles) -->
+          <svg class="studio-wave-divider" data-wave="sawtooth" aria-hidden="true">
+            <path class="studio-wave-path" d="" />
+          </svg>
+
+          <!-- Studio 01 (B119 ground floor) -->
+          <article class="studio-row" aria-labelledby="studio-1-title">
+            <div class="technical-plate-container standard-plate-aspect">
+              <div class="technical-plate-drawing">
+                <svg class="plate-svg-art" viewBox="0 0 400 240">
+                  <!-- Gantry frame -->
+                  <rect x="50" y="40" width="300" height="150" stroke-width="1.5" />
+                  <line x1="50" y1="65" x2="350" y2="65" stroke-dasharray="3 3" />
+                  <line x1="50" y1="165" x2="350" y2="165" stroke-dasharray="3 3" />
+                  <!-- Cutting carriage -->
+                  <rect x="170" y="55" width="60" height="45" />
+                  <circle cx="200" cy="77" r="10" />
+                  <line x1="200" y1="100" x2="200" y2="140" stroke-width="2" />
+                  <circle cx="200" cy="140" r="3" fill="#BE1E2D" />
+                  <!-- Laser bed honeycomb -->
+                  <line x1="80" y1="140" x2="320" y2="140" stroke-dasharray="2 4" />
+                </svg>
+                <div class="plate-title-block font-mono">
+                  <span class="fig-id">FIG. 02 &middot; CNC LASER &amp; TUBE BENDING BAY</span>
+                  <span>STUDIO 01 &middot; B119 GF</span>
+                </div>
+              </div>
+              <img src="images/studio-mechanical-wide.jpg" alt="CNC laser cutter and tube bending equipment in Studio 01" class="photo-overlay" onerror="this.style.opacity='0'; this.style.pointerEvents='none';" onload="this.classList.add('loaded');">
             </div>
+
             <div class="studio-info">
-              <span class="data-tag font-mono">STUDIO 01 · BLOCK B119</span>
-              <h3 class="item-title font-display">Mechanical Fabrication</h3>
+              <span class="data-tag font-mono">STUDIO 01 &middot; B119 GROUND FLOOR</span>
+              <h3 id="studio-1-title" class="item-title font-display">Mechanical Fabrication</h3>
               <p class="body-copy">
-                Equipped with precision CNC machining, sheet metal presses, waterjet tooling, and MIG/TIG welding bays for structural mechanical engineering.
+                CNC laser cutting, industrial FDM 3D printers, hydraulic tube bending, TIG &amp; MIG welding.
               </p>
-            </div>
-            <div class="studio-waveform-wrap" aria-hidden="true" title="Torque sawtooth waveform">
-              <svg class="studio-glyph-svg" viewBox="0 0 140 28">
-                <!-- Sawtooth waveform -->
-                <path d="M 0 24 L 20 4 L 20 24 L 40 4 L 40 24 L 60 4 L 60 24 L 80 4 L 80 24 L 100 4 L 100 24 L 120 4 L 120 24 L 140 4" />
-              </svg>
             </div>
           </article>
 
-          <!-- Studio Row 2: Electrical & Embedded (Sine Waveform) -->
-          <article class="studio-row" role="listitem">
-            <div class="studio-photo-slot">
-              <span class="data-tag font-mono">[REPLACE: PCB etching, SMD reflow oven, and oscilloscope stations in B120]</span>
+          <!-- Waveform Row Divider: Sine Wave (Full Width, Whole Cycles) -->
+          <svg class="studio-wave-divider" data-wave="sine" aria-hidden="true">
+            <path class="studio-wave-path" d="" />
+          </svg>
+
+          <!-- Studio 02 (B119 mezzanine) -->
+          <article class="studio-row" aria-labelledby="studio-2-title">
+            <div class="technical-plate-container standard-plate-aspect">
+              <div class="technical-plate-drawing">
+                <svg class="plate-svg-art" viewBox="0 0 400 240">
+                  <!-- PCB substrate outline -->
+                  <rect x="60" y="35" width="280" height="160" rx="6" stroke-width="1.5" />
+                  <!-- IC footprint -->
+                  <rect x="160" y="85" width="80" height="60" />
+                  <!-- Trace routes -->
+                  <polyline points="100,60 160,85" stroke-dasharray="2 2" />
+                  <polyline points="100,170 160,145" stroke-dasharray="2 2" />
+                  <polyline points="300,60 240,85" stroke-dasharray="2 2" />
+                  <polyline points="300,170 240,145" stroke-dasharray="2 2" />
+                  <!-- Oscilloscope wave in corner -->
+                  <rect x="250" y="45" width="80" height="40" stroke-width="1" />
+                  <path d="M 255 65 Q 265 48 275 65 T 295 65 T 315 65" stroke="#0F2756" stroke-width="1.25" fill="none" />
+                </svg>
+                <div class="plate-title-block font-mono">
+                  <span class="fig-id">FIG. 03 &middot; PCB &amp; EMBEDDED LOGIC BAY</span>
+                  <span>STUDIO 02 &middot; B119 MEZZ</span>
+                </div>
+              </div>
+              <img src="images/studio-electrical-wide.jpg" alt="Soldering stations and oscilloscopes in Studio 02" class="photo-overlay" onerror="this.style.opacity='0'; this.style.pointerEvents='none';" onload="this.classList.add('loaded');">
             </div>
+
             <div class="studio-info">
-              <span class="data-tag font-mono">STUDIO 02 · BLOCK B120</span>
-              <h3 class="item-title font-display">Electrical &amp; Embedded Systems</h3>
+              <span class="data-tag font-mono">STUDIO 02 &middot; B119 MEZZANINE</span>
+              <h3 id="studio-2-title" class="item-title font-display">Electrical &amp; Embedded Systems</h3>
               <p class="body-copy">
-                Houses automated SMD pick-and-place assembly, multi-layer circuit manufacturing, RF spectrum analyzers, and isolated logic testing stations.
+                Weller soldering &amp; rework, Fluke 15B+ multimeters &amp; DSOs, Xilinx Vivado FPGA kits, chemical etching &amp; mask baths.
               </p>
-            </div>
-            <div class="studio-waveform-wrap" aria-hidden="true" title="AC sine waveform">
-              <svg class="studio-glyph-svg" viewBox="0 0 140 28">
-                <!-- Sine waveform -->
-                <path d="M 0 14 C 10 2, 25 2, 35 14 C 45 26, 60 26, 70 14 C 80 2, 95 2, 105 14 C 115 26, 130 26, 140 14" />
-              </svg>
             </div>
           </article>
 
-          <!-- Studio Row 3: Robotics & Autonomy (PWM Square Waveform) -->
-          <article class="studio-row" role="listitem">
-            <div class="studio-photo-slot">
-              <span class="data-tag font-mono">[REPLACE: Autonomous rover testbed, motion-capture gantry, and LiDAR testing in B122]</span>
+          <!-- Waveform Row Divider: PWM Square Pulse (Full Width, Whole Cycles) -->
+          <svg class="studio-wave-divider" data-wave="pwm" aria-hidden="true">
+            <path class="studio-wave-path" d="" />
+          </svg>
+
+          <!-- Studio 03 (Central Bay) -->
+          <article class="studio-row" aria-labelledby="studio-3-title">
+            <div class="technical-plate-container standard-plate-aspect">
+              <div class="technical-plate-drawing">
+                <svg class="plate-svg-art" viewBox="0 0 400 240">
+                  <!-- Rover chassis -->
+                  <rect x="110" y="80" width="180" height="90" rx="8" stroke-width="1.5" />
+                  <!-- 4 Mecanum wheels -->
+                  <rect x="85" y="75" width="22" height="40" rx="3" />
+                  <rect x="85" y="135" width="22" height="40" rx="3" />
+                  <rect x="293" y="75" width="22" height="40" rx="3" />
+                  <rect x="293" y="135" width="22" height="40" rx="3" />
+                  <!-- RPLiDAR scanner mast -->
+                  <circle cx="200" cy="125" r="22" />
+                  <line x1="200" y1="125" x2="218" y2="112" stroke-width="1.75" />
+                  <!-- Scan field sweep -->
+                  <path d="M 160 85 A 50 50 0 0 1 240 85" stroke-dasharray="3 3" />
+                </svg>
+                <div class="plate-title-block font-mono">
+                  <span class="fig-id">FIG. 04 &middot; ROBOTICS &amp; AUTONOMY BAY</span>
+                  <span>STUDIO 03 &middot; CENTRAL BAY</span>
+                </div>
+              </div>
+              <img src="images/studio-robotics-wide.jpg" alt="Autonomous rover and drone testing in Studio 03" class="photo-overlay" onerror="this.style.opacity='0'; this.style.pointerEvents='none';" onload="this.classList.add('loaded');">
             </div>
+
             <div class="studio-info">
-              <span class="data-tag font-mono">STUDIO 03 · BLOCK B122</span>
-              <h3 class="item-title font-display">Robotics &amp; Autonomy</h3>
+              <span class="data-tag font-mono">STUDIO 03 &middot; CENTRAL BAY</span>
+              <h3 id="studio-3-title" class="item-title font-display">Robotics &amp; Autonomy</h3>
               <p class="body-copy">
-                Features motion-capture flight gantries, ROS-driven autonomous rover platforms, stereo optical cameras, and high-torque actuator calibration benches.
+                Voltera V-One, RPLiDAR scanners, NVIDIA Jetson Orin Nano kits, indoor drone flight test cage.
               </p>
-            </div>
-            <div class="studio-waveform-wrap" aria-hidden="true" title="PWM square pulse waveform">
-              <svg class="studio-glyph-svg" viewBox="0 0 140 28">
-                <!-- PWM square waveform -->
-                <path d="M 0 22 L 15 22 L 15 6 L 35 6 L 35 22 L 55 22 L 55 6 L 70 6 L 70 22 L 95 22 L 95 6 L 110 6 L 110 22 L 140 22" />
-              </svg>
             </div>
           </article>
 
-        </div>
-
-        <div style="padding-top: 2rem;">
-          <a href="#curriculum" class="link-editorial">View studio specifications and equipment rosters</a>
         </div>
 
       </div>
     </section>
 
     <!-- =========================================================================
-         5. PROJECTS SECTION (ALTERNATING ROWS WITH BLUEPRINT SCHEMATICS)
+         7. PROJECTS SECTION (ALTERNATING ROWS WITH TECHNICAL PLATES)
          ========================================================================= -->
     <section id="projects" class="projects-section" aria-labelledby="projects-heading">
       <div class="site-container">
         
-        <div class="section-header-block">
-          <span class="data-tag font-mono accent">SELECTED INITIATIVES</span>
-          <h2 id="projects-heading" class="section-heading font-display">Student engineered machines</h2>
-          <p class="body-copy" style="margin-top: 0.75rem;">
-            Multidisciplinary teams build and validate physical prototypes across aerospace, electric mobility, autonomous navigation, and nano-satellite environmental testing.
+        <div style="margin-bottom: 3.5rem;">
+          <span class="data-tag font-mono accent">ENGINEERING INITIATIVES</span>
+          <h2 id="projects-heading" class="section-heading font-display" style="margin-top: 0.5rem; margin-bottom: 0.75rem;">Student engineered machines</h2>
+          <p class="body-copy">
+            Multidisciplinary teams build and validate physical systems across aerospace, electric mobility, autonomous navigation, and nano-satellite environmental testing.
           </p>
         </div>
 
@@ -328,155 +448,154 @@
           
           <!-- Project 1: Vertical Flight Society (Lead: 3rd place worldwide VFS 2025) -->
           <article class="project-row" aria-labelledby="proj-vfs-title">
-            <div class="project-media-frame">
-              <div class="project-photo-underlay">
-                <span class="data-tag font-mono">[REPLACE: VFS VTOL aircraft during hover testing at Patiala airfield]</span>
+            <div class="technical-plate-container standard-plate-aspect">
+              <div class="technical-plate-drawing">
+                <svg class="plate-svg-art" viewBox="0 0 480 280">
+                  <!-- VTOL Airframe lines -->
+                  <path d="M 120 140 L 360 140 M 240 60 L 240 220 M 160 140 L 80 80 M 160 140 L 80 200 M 320 140 L 400 80 M 320 140 L 400 200" stroke-width="1.3" />
+                  <circle cx="80" cy="80" r="26" stroke-dasharray="3 3" />
+                  <circle cx="80" cy="200" r="26" stroke-dasharray="3 3" />
+                  <circle cx="400" cy="80" r="26" stroke-dasharray="3 3" />
+                  <circle cx="400" cy="200" r="26" stroke-dasharray="3 3" />
+                  <rect x="210" y="115" width="60" height="50" stroke-width="1.5" />
+                </svg>
+                <div class="project-callouts">
+                  <span class="callout-label" style="top: 18%; left: 8%;">TILT-ROTOR NACELLE</span>
+                  <span class="callout-label" style="bottom: 20%; left: 8%;">CARBON COMPOSITE SPAN</span>
+                  <span class="callout-label" style="top: 36%; right: 10%;">AVIONICS BAY</span>
+                </div>
+                <div class="plate-title-block font-mono">
+                  <span class="fig-id">FIG. 05 &middot; VFS VTOL MAV PROTOTYPE</span>
+                  <span>AERO &middot; TIET PATIALA</span>
+                </div>
               </div>
-              
-              <!-- Blueprint SVG Schematic: VTOL Tilt-Rotor Aircraft -->
-              <svg class="project-blueprint-svg" viewBox="0 0 480 300">
-                <!-- Airframe lines -->
-                <path d="M 120 150 L 360 150 M 240 60 L 240 240 M 160 150 L 80 80 M 160 150 L 80 220 M 320 150 L 400 90 M 320 150 L 400 210" />
-                <circle cx="80" cy="80" r="28" stroke-dasharray="3 3" />
-                <circle cx="80" cy="220" r="28" stroke-dasharray="3 3" />
-                <circle cx="400" cy="90" r="28" stroke-dasharray="3 3" />
-                <circle cx="400" cy="210" r="28" stroke-dasharray="3 3" />
-                <rect x="210" y="120" width="60" height="60" stroke-width="1.5" />
-              </svg>
-
-              <!-- Technical Callout Leader Labels -->
-              <div class="project-callouts">
-                <span class="callout-label" style="top: 22%; left: 8%;">TILT-ROTOR NACELLE</span>
-                <span class="callout-label" style="bottom: 24%; left: 8%;">CARBON COMPOSITE SPAN</span>
-                <span class="callout-label" style="top: 36%; right: 10%;">AUTONOMOUS AVIONICS</span>
-              </div>
+              <img src="images/project-vfs-mav.jpg" alt="VFS autonomous tilt-rotor aircraft prototype" class="photo-overlay" onerror="this.style.opacity='0'; this.style.pointerEvents='none';" onload="this.classList.add('loaded');">
             </div>
 
             <div class="project-content">
-              <span class="data-tag font-mono">AERONAUTICS · COMPETITION ENTRY</span>
+              <span class="data-tag font-mono">AERONAUTICS &middot; COMPETITION ENTRY</span>
               <h3 id="proj-vfs-title" class="item-title font-display">3rd place worldwide, Vertical Flight Society 2025</h3>
               <p class="body-copy">
-                Student-engineered autonomous tilt-rotor micro air vehicle competing internationally against top technical institutions. The aircraft combines carbon fiber structural layup, custom motor-control firmware, and autonomous transition flight modes.
+                Student-engineered autonomous tilt-rotor micro air vehicle competing internationally against top technical institutions. The aircraft combines carbon composite structural layup, custom motor-control firmware, and autonomous transition flight modes.
               </p>
               <div>
-                <a href="#curriculum" class="link-editorial">Read the project</a>
+                <a href="#projects" class="link-editorial">Read the project</a>
               </div>
             </div>
           </article>
 
           <!-- Project 2: THAR-eV (Diesel-to-Electric Conversion) -->
           <article class="project-row reversed" aria-labelledby="proj-tharev-title">
-            <div class="project-media-frame">
-              <div class="project-photo-underlay">
-                <span class="data-tag font-mono">[REPLACE: THAR-eV chassis on the B119 vehicle lift with student wiring team]</span>
+            <div class="technical-plate-container standard-plate-aspect">
+              <div class="technical-plate-drawing">
+                <svg class="plate-svg-art" viewBox="0 0 480 280">
+                  <!-- 4x4 Chassis outline -->
+                  <rect x="90" y="65" width="300" height="150" rx="10" stroke-width="1.5" />
+                  <line x1="140" y1="45" x2="140" y2="235" stroke-width="2" />
+                  <line x1="340" y1="45" x2="340" y2="235" stroke-width="2" />
+                  <!-- 4 Tires -->
+                  <rect x="120" y="30" width="40" height="22" rx="3" />
+                  <rect x="120" y="228" width="40" height="22" rx="3" />
+                  <rect x="320" y="30" width="40" height="22" rx="3" />
+                  <rect x="320" y="228" width="40" height="22" rx="3" />
+                  <!-- 72V Battery Bay -->
+                  <rect x="180" y="90" width="120" height="100" stroke-dasharray="4 3" />
+                  <circle cx="140" cy="140" r="15" />
+                  <circle cx="340" cy="140" r="15" />
+                </svg>
+                <div class="project-callouts">
+                  <span class="callout-label" style="top: 10%; left: 16%;">STEER-BY-WIRE RACK</span>
+                  <span class="callout-label" style="top: 48%; left: 40%;">72V BATTERY PACK</span>
+                  <span class="callout-label" style="bottom: 12%; right: 16%;">REGEN BRAKE INVERTER</span>
+                </div>
+                <div class="plate-title-block font-mono">
+                  <span class="fig-id">FIG. 06 &middot; THAR-eV CHASSIS &amp; 72V PACK</span>
+                  <span>AUTO &middot; TIET PATIALA</span>
+                </div>
               </div>
-
-              <!-- Blueprint SVG Schematic: 4x4 Off-Road Electric Chassis -->
-              <svg class="project-blueprint-svg" viewBox="0 0 480 300">
-                <!-- Chassis Frame -->
-                <rect x="90" y="70" width="300" height="160" rx="12" stroke-width="1.5" />
-                <!-- Front & Rear Axles -->
-                <line x1="140" y1="50" x2="140" y2="250" stroke-width="2" />
-                <line x1="340" y1="50" x2="340" y2="250" stroke-width="2" />
-                <!-- Wheels -->
-                <rect x="120" y="34" width="40" height="24" rx="3" />
-                <rect x="120" y="242" width="40" height="24" rx="3" />
-                <rect x="320" y="34" width="40" height="24" rx="3" />
-                <rect x="320" y="242" width="40" height="24" rx="3" />
-                <!-- Battery Compartment -->
-                <rect x="180" y="95" width="120" height="110" stroke-dasharray="4 3" />
-                <!-- Dual Motors -->
-                <circle cx="140" cy="150" r="16" />
-                <circle cx="340" cy="150" r="16" />
-              </svg>
-
-              <!-- Technical Callout Leader Labels -->
-              <div class="project-callouts">
-                <span class="callout-label" style="top: 12%; left: 18%;">STEER-BY-WIRE RACK</span>
-                <span class="callout-label" style="top: 48%; left: 40%;">72V BATTERY PACK</span>
-                <span class="callout-label" style="bottom: 12%; right: 18%;">REGEN BRAKE INVERTER</span>
-              </div>
+              <img src="images/project-thar-ev.jpg" alt="THAR-eV converted electric vehicle chassis" class="photo-overlay" onerror="this.style.opacity='0'; this.style.pointerEvents='none';" onload="this.classList.add('loaded');">
             </div>
 
             <div class="project-content">
-              <span class="data-tag font-mono">AUTOMOTIVE · ELECTRIC POWERTRAIN</span>
+              <span class="data-tag font-mono">AUTOMOTIVE &middot; ELECTRIC POWERTRAIN</span>
               <h3 id="proj-tharev-title" class="item-title font-display">THAR-eV conversion</h3>
               <p class="body-copy">
-                Over 150 undergraduate students collaborated across mechanical, electrical, and software disciplines to convert a decommissioned diesel Mahindra Thar into a functional 72V dual-motor electric test platform with custom battery management and telematics.
+                Over 150 undergraduate students collaborated across mechanical, electrical, and software disciplines to convert a diesel Mahindra Thar into a functional 72V dual-motor electric test platform with custom battery management and telematics.
               </p>
               <div>
-                <a href="#curriculum" class="link-editorial">Read the project</a>
+                <a href="#projects" class="link-editorial">Read the project</a>
               </div>
             </div>
           </article>
 
           <!-- Project 3: Drive-by-Wire Autonomous Vehicle -->
           <article class="project-row" aria-labelledby="proj-dbw-title">
-            <div class="project-media-frame">
-              <div class="project-photo-underlay">
-                <span class="data-tag font-mono">[REPLACE: Drive-by-wire golf cart running obstacle mapping on TIET ring road]</span>
+            <div class="technical-plate-container standard-plate-aspect">
+              <div class="technical-plate-drawing">
+                <svg class="plate-svg-art" viewBox="0 0 480 280">
+                  <rect x="100" y="80" width="280" height="120" rx="8" stroke-width="1.5" />
+                  <circle cx="160" cy="140" r="26" stroke-dasharray="2 2" />
+                  <circle cx="320" cy="140" r="26" stroke-dasharray="2 2" />
+                  <!-- Roof sensor mast with LiDAR -->
+                  <line x1="240" y1="80" x2="240" y2="35" stroke-width="1.75" />
+                  <circle cx="240" cy="30" r="12" />
+                  <line x1="220" y1="30" x2="260" y2="30" />
+                </svg>
+                <div class="project-callouts">
+                  <span class="callout-label" style="top: 10%; left: 38%;">LIDAR SCANNER MAST</span>
+                  <span class="callout-label" style="bottom: 18%; left: 24%;">CAN-BUS ACTUATORS</span>
+                </div>
+                <div class="plate-title-block font-mono">
+                  <span class="fig-id">FIG. 07 &middot; DRIVE-BY-WIRE ACTUATION TESTBED</span>
+                  <span>AUTONOMY &middot; TIET PATIALA</span>
+                </div>
               </div>
-
-              <!-- Blueprint SVG Schematic: Sensor & LiDAR Rig -->
-              <svg class="project-blueprint-svg" viewBox="0 0 480 300">
-                <rect x="100" y="90" width="280" height="120" rx="8" stroke-width="1.5" />
-                <circle cx="160" cy="150" r="28" stroke-dasharray="2 2" />
-                <circle cx="320" cy="150" r="28" stroke-dasharray="2 2" />
-                <!-- Roof sensor mast -->
-                <line x1="240" y1="90" x2="240" y2="40" stroke-width="1.75" />
-                <circle cx="240" cy="35" r="12" />
-                <line x1="220" y1="35" x2="260" y2="35" />
-              </svg>
-
-              <div class="project-callouts">
-                <span class="callout-label" style="top: 10%; left: 38%;">LIDAR SCANNER MAST</span>
-                <span class="callout-label" style="bottom: 18%; left: 24%;">CAN ACTUATORS</span>
-              </div>
+              <img src="images/project-dbw-rover.jpg" alt="Electrified drive-by-wire test cart with roof sensor mast" class="photo-overlay" onerror="this.style.opacity='0'; this.style.pointerEvents='none';" onload="this.classList.add('loaded');">
             </div>
 
             <div class="project-content">
-              <span class="data-tag font-mono">AUTONOMOUS SYSTEMS · SENSOR FUSION</span>
+              <span class="data-tag font-mono">AUTONOMOUS SYSTEMS &middot; SENSOR FUSION</span>
               <h3 id="proj-dbw-title" class="item-title font-display">Drive-by-wire test platform</h3>
               <p class="body-copy">
                 An electrified light vehicle testbed built with full drive-by-wire steering, braking, and throttle control. The vehicle serves as the real-time proving ground for student sensor fusion algorithms combining dual 16-channel LiDAR and differential GPS.
               </p>
               <div>
-                <a href="#curriculum" class="link-editorial">Read the project</a>
+                <a href="#projects" class="link-editorial">Read the project</a>
               </div>
             </div>
           </article>
 
           <!-- Project 4: ThaparSat Calibration Chamber -->
           <article class="project-row reversed" aria-labelledby="proj-sat-title">
-            <div class="project-media-frame">
-              <div class="project-photo-underlay">
-                <span class="data-tag font-mono">[REPLACE: Students checking vacuum seal gauges on the cylindrical test chamber]</span>
+            <div class="technical-plate-container standard-plate-aspect">
+              <div class="technical-plate-drawing">
+                <svg class="plate-svg-art" viewBox="0 0 480 280">
+                  <rect x="110" y="70" width="260" height="140" rx="70" stroke-width="1.75" />
+                  <line x1="180" y1="70" x2="180" y2="210" stroke-dasharray="4 4" />
+                  <line x1="300" y1="70" x2="300" y2="210" stroke-dasharray="4 4" />
+                  <rect x="220" y="210" width="40" height="35" />
+                  <circle cx="240" cy="140" r="22" stroke-dasharray="2 2" />
+                </svg>
+                <div class="project-callouts">
+                  <span class="callout-label" style="top: 18%; left: 26%;">HIGH VACUUM CELL</span>
+                  <span class="callout-label" style="bottom: 12%; left: 34%;">PUMP PORT</span>
+                </div>
+                <div class="plate-title-block font-mono">
+                  <span class="fig-id">FIG. 08 &middot; THAPARSAT THERMAL-VACUUM CELL</span>
+                  <span>AEROSPACE &middot; TIET PATIALA</span>
+                </div>
               </div>
-
-              <!-- Blueprint SVG Schematic: Thermal Vacuum Chamber -->
-              <svg class="project-blueprint-svg" viewBox="0 0 480 300">
-                <rect x="110" y="80" width="260" height="140" rx="70" stroke-width="1.75" />
-                <line x1="180" y1="80" x2="180" y2="220" stroke-dasharray="4 4" />
-                <line x1="300" y1="80" x2="300" y2="220" stroke-dasharray="4 4" />
-                <!-- Vacuum pump ports -->
-                <rect x="220" y="220" width="40" height="35" />
-                <circle cx="240" cy="150" r="24" stroke-dasharray="2 2" />
-              </svg>
-
-              <div class="project-callouts">
-                <span class="callout-label" style="top: 18%; left: 28%;">HIGH VACUUM CELL</span>
-                <span class="callout-label" style="bottom: 12%; left: 35%;">TURBOMOLECULAR PORT</span>
-              </div>
+              <img src="images/project-thaparsat.jpg" alt="Thermal-vacuum calibration chamber for nanosatellite testing" class="photo-overlay" onerror="this.style.opacity='0'; this.style.pointerEvents='none';" onload="this.classList.add('loaded');">
             </div>
 
             <div class="project-content">
-              <span class="data-tag font-mono">AEROSPACE · NANOSATELLITE</span>
+              <span class="data-tag font-mono">AEROSPACE &middot; NANOSATELLITE</span>
               <h3 id="proj-sat-title" class="item-title font-display">ThaparSat calibration chamber</h3>
               <p class="body-copy">
                 Designed and assembled entirely inside ELC maker bays, this vacuum and thermal environmental testing chamber validates satellite sensor packages, magnetorquers, and onboard power boards under simulated orbital temperature gradients.
               </p>
               <div>
-                <a href="#curriculum" class="link-editorial">Read the project</a>
+                <a href="#projects" class="link-editorial">Read the project</a>
               </div>
             </div>
           </article>
@@ -487,7 +606,7 @@
     </section>
 
     <!-- =========================================================================
-         6. AUDIENCE ROUTES
+         8. AUDIENCE ROUTES
          ========================================================================= -->
     <section class="audience-section" aria-labelledby="audience-heading">
       <div class="site-container">
@@ -498,7 +617,6 @@
         </div>
 
         <div class="audience-grid">
-          
           <div class="audience-item">
             <h3 class="audience-title font-display">Students</h3>
             <p class="body-copy">
@@ -528,14 +646,13 @@
               <a href="#contact" class="link-editorial">Schedule a visit</a>
             </div>
           </div>
-
         </div>
 
       </div>
     </section>
 
     <!-- =========================================================================
-         7. NEWS & EVENTS STRIP (3 PLACEHOLDER ITEMS)
+         9. NEWS BULLETIN STRIP (3 PLACEHOLDER ITEMS)
          ========================================================================= -->
     <section id="news" class="news-section" aria-labelledby="news-heading">
       <div class="site-container">
@@ -546,7 +663,6 @@
         </div>
 
         <div class="news-list">
-          
           <!-- News Item 1 -->
           <article class="news-item">
             <div class="news-meta">
@@ -597,38 +713,57 @@
               <a href="#news" class="link-editorial">Read notice</a>
             </div>
           </article>
-
         </div>
 
       </div>
     </section>
 
     <!-- =========================================================================
-         8. PEOPLE SECTION (ONE LINE NAMING THE TWO COORDINATORS)
+         10. PEOPLE (EXACTLY ONE LINE, FACULTY PORTRAITS)
          ========================================================================= -->
     <section id="people" class="people-section" aria-labelledby="people-heading">
       <div class="site-container">
-        <div class="people-statement-block">
+        <div>
           <span class="data-tag font-mono accent">CENTRE LEADERSHIP</span>
-          <h2 id="people-heading" class="section-heading font-display" style="margin-bottom: 1rem;">Academic coordination</h2>
+          <h2 id="people-heading" class="section-heading font-display" style="margin-top: 0.5rem; margin-bottom: 1rem;">Academic coordination</h2>
           <p class="body-copy" style="font-size: 1.15rem; color: var(--ink-primary);">
             The Experiential Learning Centre is coordinated by <strong>Dr. R.K. Duvedi</strong> (Mechanical Engineering) and <strong>Dr. Sharad Saxena</strong> (Computer Science &amp; Engineering).
           </p>
-          <div style="margin-top: 1.25rem;">
-            <a href="#people" class="link-editorial">View studio staff and technical specialist roster</a>
+
+          <!-- Authentic Faculty Portrait Cards -->
+          <div class="people-faculty-row">
+            <div class="faculty-card">
+              <img src="assets/faculty/leader_2.jpg" alt="Dr. R.K. Duvedi" class="faculty-photo" width="64" height="64" onerror="this.style.display='none'">
+              <div>
+                <div class="faculty-info-name">Dr. R.K. Duvedi</div>
+                <div class="faculty-info-role">Coordinator &middot; Mechanical Engineering</div>
+              </div>
+            </div>
+
+            <div class="faculty-card">
+              <img src="assets/faculty/leader_3.jpg" alt="Dr. Sharad Saxena" class="faculty-photo" width="64" height="64" onerror="this.style.display='none'">
+              <div>
+                <div class="faculty-info-name">Dr. Sharad Saxena</div>
+                <div class="faculty-info-role">Coordinator &middot; Computer Science &amp; Engineering</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <a href="#people" class="link-editorial">View the People directory</a>
           </div>
         </div>
       </div>
     </section>
 
     <!-- =========================================================================
-         9. CLOSING CTA & SLIM FOOTER
+         11. CLOSING CTA & SLIM FOOTER
          ========================================================================= -->
     <section id="contact" class="closing-cta-section" aria-labelledby="cta-heading">
       <div class="site-container">
         <div class="closing-cta-inner">
           <span class="data-tag font-mono accent">PROJECT CONSULTATION</span>
-          <h2 id="cta-heading" class="section-heading font-display" style="margin-bottom: 1.25rem;">Have a project idea?</h2>
+          <h2 id="cta-heading" class="section-heading font-display" style="margin-top: 0.5rem; margin-bottom: 1.25rem;">Have a project idea?</h2>
           <p class="body-copy" style="margin-bottom: 2rem;">
             Undergraduate engineering students with prototype proposals or faculty with industry challenges can reserve bench time or consult directly with studio coordinators.
           </p>
@@ -651,7 +786,7 @@
             <img src="assets/thapar_official_logo.png" alt="Thapar Institute of Engineering and Technology" class="footer-logo-img" width="200" height="40">
           </div>
           <address class="footer-address">
-            Experiential Learning Centre, Block B, Thapar Institute of Engineering &amp; Technology, Bhadson Road, Patiala, Punjab 147004, India.
+            Experiential Learning Centre, Block B, Thapar Institute of Engineering &amp; Technology, Bhadson Road, Patiala, Punjab 147004, India. Established 2018.
           </address>
         </div>
 
@@ -663,7 +798,7 @@
             <a href="https://www.thapar.edu" class="footer-link" target="_blank" rel="noopener noreferrer">Thapar University Main Site</a>
           </nav>
           <p class="footer-copyright font-mono">
-            &copy; 2025 Experiential Learning Centre · TIET Patiala. All rights reserved.
+            &copy; 2025 Experiential Learning Centre &middot; TIET Patiala. All rights reserved.
           </p>
         </div>
 

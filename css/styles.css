@@ -1,8 +1,8 @@
 /* ==========================================================================
    EXPERIENTIAL LEARNING CENTRE (ELC) · THAPAR INSTITUTE OF ENGINEERING & TECH
-   EDITORIAL ENGINEERING INSTITUTION HOMEPAGE
+   EDITORIAL ENGINEERING INSTITUTION HOMEPAGE — FIX PASS SPECIFICATION
    Typography: Source Serif 4 (Headings) · IBM Plex Sans (Body/UI) · IBM Plex Mono (Data)
-   Palette: Warm Archival Off-White (#FAF8F4), Ink (#161616), Brand Navy (#0F2756), Red Accent (#BE1E2D)
+   Palette: Warm Archival Off-White (#FAF8F4), Ink (#14171C), Brand Navy (#0F2756), Red Accent (#BE1E2D)
    ========================================================================== */
 
 /* --- 1. SELF-HOSTED WEB FONTS --- */
@@ -54,7 +54,7 @@
   src: url('../assets/fonts/IBMPlexMono-400.woff2') format('woff2');
 }
 
-/* --- 2. DESIGN TOKENS & ROOTS --- */
+/* --- 2. DESIGN TOKENS --- */
 :root {
   --bg-canvas: #FAF8F4;
   --bg-canvas-subtle: #F4EFE6;
@@ -62,8 +62,9 @@
   --bg-surface-tint: #F2EDE4;
 
   --ink-primary: #14171C;
-  --ink-secondary: #3D444F;
-  --ink-muted: #6B7280;
+  --ink-secondary: #383E48; /* Contrast >= 7:1 on #FAF8F4 */
+  --ink-muted: #555B66;     /* Contrast >= 4.5:1 on #FAF8F4 */
+  --ink-inactive: #5C626E;  /* ~60% ink, contrast >= 4.5:1 */
 
   --brand-navy: #0F2756;
   --brand-navy-dark: #091838;
@@ -73,7 +74,7 @@
   --brand-red-subtle: rgba(190, 30, 45, 0.08);
 
   --border-hairline: #E2DDD5;
-  --border-light: #ECE7DF;
+  --border-subtle: #ECE7DF;
   --border-strong: #14171C;
 
   --ease-trace: cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -82,6 +83,7 @@
   --dur-deliberate: 700ms;
 
   --container-max: 1240px;
+  --header-height: 72px;
 }
 
 /* --- 3. RESET & BASE --- */
@@ -101,7 +103,7 @@ html {
 }
 
 body {
-  font-family: 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
   background-color: var(--bg-canvas);
   color: var(--ink-secondary);
   font-size: 1.09375rem; /* 17.5px */
@@ -146,11 +148,11 @@ body {
   font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/* H1 Statement */
+/* Hero H1 Statement: >= 72px at 1440 */
 h1, .hero-title {
   font-family: 'Source Serif 4', Georgia, serif;
   font-weight: 500;
-  font-size: clamp(2.75rem, 6.2vw, 5.25rem);
+  font-size: clamp(3.25rem, 5.4vw, 5.25rem); /* 72px+ at 1440 */
   line-height: 1.04;
   letter-spacing: -0.02em;
   color: var(--ink-primary);
@@ -183,10 +185,10 @@ h3, .item-title {
 /* Editorial Body Text */
 p.lead, .hero-lead {
   font-family: 'IBM Plex Sans', sans-serif;
-  font-size: clamp(1.125rem, 1.4vw, 1.25rem);
+  font-size: clamp(1.125rem, 1.35vw, 1.25rem); /* 18px-20px */
   line-height: 1.62;
   color: var(--ink-secondary);
-  max-width: 65ch;
+  max-width: 66ch;
   text-wrap: pretty;
 }
 
@@ -199,7 +201,7 @@ p, .body-copy {
   text-wrap: pretty;
 }
 
-/* Data & Metadata Tags */
+/* Data & Metadata Tags (Minimum 12px) */
 .data-tag {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12.5px;
@@ -213,7 +215,7 @@ p, .body-copy {
   color: var(--brand-navy);
 }
 
-/* Stat Figures (Lining & Tabular) */
+/* Stat Figures (Lining & Tabular, >= 3rem) */
 .stat-figure {
   font-family: 'Source Serif 4', Georgia, serif;
   font-weight: 500;
@@ -233,7 +235,7 @@ p, .body-copy {
   display: block;
 }
 
-/* --- 5. BUTTONS & ACTIONS (STRICT SANS ONLY) --- */
+/* --- 5. BUTTONS & ACTIONS (STRICT SANS ONLY, NO MONO, NO ICONS) --- */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -248,12 +250,11 @@ p, .body-copy {
   text-decoration: none;
   cursor: pointer;
   border-radius: 2px;
-  transition: background-color var(--dur-fast) var(--ease-trace), border-color var(--dur-fast) var(--ease-trace), transform var(--dur-fast) var(--ease-trace);
+  transition: background-color var(--dur-fast) var(--ease-trace), transform var(--dur-fast) var(--ease-trace);
 }
 
 .btn-primary:hover {
   background-color: var(--brand-navy-dark);
-  border-color: var(--brand-navy-dark);
   transform: translateY(-1px);
 }
 
@@ -275,7 +276,8 @@ p, .body-copy {
   text-decoration: none;
   cursor: pointer;
   border-radius: 2px;
-  transition: all var(--dur-fast) var(--ease-trace);
+  transition: background-color var(--dur-fast) var(--ease-trace), color var(--dur-fast) var(--ease-trace);
+  white-space: nowrap;
 }
 
 .btn-outline:hover {
@@ -326,8 +328,8 @@ p, .body-copy {
   max-width: var(--container-max);
   margin-left: auto;
   margin-right: auto;
-  padding-left: clamp(1.25rem, 4vw, 2.5rem);
-  padding-right: clamp(1.25rem, 4vw, 2.5rem);
+  padding-left: clamp(1.5rem, 3vw, 2rem); /* 24-32px */
+  padding-right: clamp(1.5rem, 3vw, 2rem);
 }
 
 /* Hairline Grid Dividers */
@@ -338,31 +340,23 @@ p, .body-copy {
   border: none;
 }
 
-.hairline-border-top {
-  border-top: 1px solid var(--border-hairline);
-}
-
-.hairline-border-bottom {
-  border-bottom: 1px solid var(--border-hairline);
-}
-
-/* --- 7. HEADER & NAVIGATION --- */
+/* --- 7. HEADER (72PX TALL, LOGOS 44-48PX, NEVER CLIPPED) --- */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: rgba(250, 248, 244, 0.94);
+  background-color: rgba(250, 248, 244, 0.95);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border-hairline);
-  transition: border-color var(--dur-fast) ease;
+  height: var(--header-height);
 }
 
 .header-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 80px;
+  height: var(--header-height);
 }
 
 .header-logos {
@@ -370,6 +364,7 @@ p, .body-copy {
   align-items: center;
   gap: 16px;
   text-decoration: none;
+  flex-shrink: 0;
 }
 
 .header-logo-img {
@@ -388,7 +383,7 @@ p, .body-copy {
 .desktop-nav {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 28px;
 }
 
 .nav-link {
@@ -421,7 +416,13 @@ p, .body-copy {
   background-color: var(--brand-red);
 }
 
-/* Mobile Nav Toggle Button */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
 .mobile-nav-toggle {
   display: none;
   background: transparent;
@@ -432,7 +433,6 @@ p, .body-copy {
   border-radius: 2px;
 }
 
-/* Mobile Drawer */
 .mobile-nav-drawer {
   display: none;
   background-color: var(--bg-canvas);
@@ -455,20 +455,29 @@ p, .body-copy {
   padding: 8px 0;
 }
 
-/* --- 8. THE TRACE: VERTICAL SPINE (DESKTOP) & TOP BAR (MOBILE) --- */
+@media (max-width: 991px) {
+  .desktop-nav {
+    display: none;
+  }
+  .mobile-nav-toggle {
+    display: block;
+  }
+}
+
+/* --- 8. THE SPINE (CONTAINER-LEFT - 40PX, >= 1280PX ONLY) --- */
 .trace-spine {
   position: fixed;
   top: 0;
   bottom: 0;
-  left: 36px;
+  left: calc((100vw - var(--container-max)) / 2 - 40px);
   width: 1px;
-  background-color: rgba(226, 221, 213, 0.7);
+  background-color: rgba(226, 221, 213, 0.75);
   z-index: 90;
   pointer-events: none;
   display: none;
 }
 
-@media (min-width: 1180px) {
+@media (min-width: 1280px) {
   .trace-spine {
     display: block;
   }
@@ -492,7 +501,7 @@ p, .body-copy {
   top: 50%;
   transform: translateY(-50%);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
+  font-size: 11.5px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--brand-navy);
@@ -517,29 +526,29 @@ p, .body-copy {
   pointer-events: none;
 }
 
-@media (min-width: 1180px) {
+@media (min-width: 1280px) {
   .trace-mobile-bar {
     display: none;
   }
 }
 
-/* --- 9. HERO SECTION & HERO WAVE CANVAS --- */
+/* --- 9. HERO SECTION (100SVH, ABOVE THE FOLD AT 1440X900) --- */
 .hero-section {
   position: relative;
-  padding-top: clamp(2.5rem, 5vw, 4.5rem);
-  padding-bottom: clamp(3.5rem, 6vw, 6rem);
-  overflow: hidden;
-  border-bottom: 1px solid var(--border-hairline);
-}
-
-.hero-grid {
+  min-height: calc(100svh - var(--header-height));
+  min-height: calc(100vh - var(--header-height));
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  justify-content: space-between;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-hairline);
+  padding-top: clamp(2rem, 4vw, 3.5rem);
 }
 
-.hero-text-block {
-  max-width: 820px;
+.hero-main-content {
+  position: relative;
+  z-index: 10;
+  max-width: 860px;
 }
 
 .hero-eyebrow {
@@ -553,11 +562,11 @@ p, .body-copy {
 }
 
 .hero-title {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .hero-lead {
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
 }
 
 .hero-cta-group {
@@ -565,89 +574,18 @@ p, .body-copy {
   align-items: center;
   flex-wrap: wrap;
   gap: 28px;
-  margin-bottom: 2rem;
 }
 
-/* Full-width Photo Slot */
-.photo-slot-wrapper {
+/* Hero Signature Scene ("THE TRACE" Wave + Car + Rocket Pad) */
+.hero-signature-scene {
   position: relative;
   width: 100%;
-  border: 1px solid var(--border-hairline);
-  background-color: var(--bg-surface-tint);
-  overflow: hidden;
-}
-
-.hero-photo-slot {
-  aspect-ratio: 21 / 9;
-  min-height: 260px;
-  max-height: 440px;
-}
-
-.photo-slot-content {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  text-align: center;
-  background-image: 
-    linear-gradient(to right, rgba(226, 221, 213, 0.45) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(226, 221, 213, 0.45) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-
-.photo-slot-tag {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--brand-navy);
-  background-color: rgba(250, 248, 244, 0.95);
-  padding: 6px 14px;
-  border: 1px solid var(--border-hairline);
-}
-
-.photo-slot-caption {
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 13.5px;
-  color: var(--ink-muted);
-  margin-top: 10px;
-}
-
-/* Verified Stats (Max 3, clean lining figures, no red chips) */
-.hero-stats-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 32px;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border-hairline);
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Hero Wave Canvas (Bottom ~40% of hero, edge-faded mask) */
-.hero-wave-container {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 38%;
+  height: 200px;
+  margin-top: auto;
   pointer-events: none;
-  z-index: 1;
-  -webkit-mask-image: 
-    linear-gradient(to right, transparent, black 10%, black 90%, transparent),
-    linear-gradient(to bottom, transparent 0%, black 30%, black 100%);
-  mask-image: 
-    linear-gradient(to right, transparent, black 10%, black 90%, transparent),
-    linear-gradient(to bottom, transparent 0%, black 30%, black 100%);
-  -webkit-mask-composite: source-in;
-  mask-composite: intersect;
+  z-index: 5;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
 }
 
 #heroWaveCanvas {
@@ -656,54 +594,146 @@ p, .body-copy {
   display: block;
 }
 
-/* --- 10. SECTION: WHAT ELC IS & SEMESTER ASCENT CURVE --- */
+/* --- 10. STATS & HERO PHOTO BENCH (MOVED BELOW THE FOLD) --- */
+.stats-banner-section {
+  padding-top: clamp(3rem, 5vw, 4.5rem);
+  padding-bottom: clamp(3rem, 5vw, 4.5rem);
+  border-bottom: 1px solid var(--border-hairline);
+  background-color: var(--bg-canvas-subtle);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 36px;
+  margin-bottom: 3rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- 11. TECHNICAL PLATE DRAWINGS (FINISHED FALLBACKS, NO EMPTY BOXES) --- */
+.technical-plate-container {
+  position: relative;
+  width: 100%;
+  border: 1px solid var(--border-hairline);
+  background-color: var(--bg-canvas-subtle);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(226, 221, 213, 0.4);
+}
+
+.hero-plate-aspect {
+  aspect-ratio: 21 / 9;
+  min-height: 280px;
+  max-height: 440px;
+}
+
+.standard-plate-aspect {
+  aspect-ratio: 16 / 10;
+  min-height: 240px;
+}
+
+.technical-plate-drawing {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: #FAF7F0;
+  background-image: 
+    linear-gradient(to right, rgba(226, 221, 213, 0.45) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(226, 221, 213, 0.45) 1px, transparent 1px);
+  background-size: 20px 20px;
+  transition: opacity 600ms var(--ease-trace);
+  z-index: 1;
+}
+
+.plate-svg-art {
+  width: 100%;
+  height: calc(100% - 32px);
+  stroke: var(--brand-navy);
+  stroke-width: 1.25;
+  fill: none;
+}
+
+.plate-title-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-hairline);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--ink-muted);
+  background-color: rgba(250, 247, 240, 0.85);
+}
+
+.plate-title-block .fig-id {
+  font-weight: 500;
+  color: var(--brand-navy);
+}
+
+/* Real Photo Overlay (fades in when dropped in /public/images/) */
+.photo-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  z-index: 2;
+  transition: opacity 600ms var(--ease-trace), transform 600ms var(--ease-trace);
+}
+
+.photo-overlay.loaded {
+  opacity: 1;
+}
+
+.technical-plate-container:hover .photo-overlay.loaded {
+  transform: scale(1.02);
+}
+
+.technical-plate-container:hover .photo-overlay.loaded ~ .technical-plate-drawing,
+.technical-plate-container:has(.photo-overlay.loaded) .technical-plate-drawing {
+  opacity: 0.15;
+}
+
+/* --- 12. SECTION: WHAT ELC IS --- */
 .overview-section {
-  padding-top: clamp(4rem, 7vw, 6.5rem);
-  padding-bottom: clamp(4rem, 7vw, 6.5rem);
+  padding-top: clamp(4rem, 6vw, 6rem);
+  padding-bottom: clamp(3rem, 5vw, 4.5rem);
   border-bottom: 1px solid var(--border-hairline);
 }
 
 .overview-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 3rem;
+  gap: 2.5rem;
 }
 
-@media (min-width: 992px) {
-  .overview-grid {
-    grid-template-columns: 5fr 7fr;
-    gap: 4.5rem;
-    align-items: start;
-  }
+/* --- 13. SECTION: SEMESTERS (NO DASHBOARD CARD, FULL-WIDTH ASCENT CURVE) --- */
+.semesters-section {
+  padding-top: clamp(4rem, 6vw, 6rem);
+  padding-bottom: clamp(4rem, 6vw, 6rem);
+  border-bottom: 1px solid var(--border-hairline);
 }
 
-.overview-copy-block {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-/* Ascent Curve Trajectory SVG Component */
-.ascent-curve-card {
-  border: 1px solid var(--border-hairline);
-  background-color: var(--bg-surface);
-  padding: 2rem;
+.ascent-curve-fullwidth {
+  width: 100%;
   position: relative;
-}
-
-.ascent-curve-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border-light);
+  margin-top: 2.5rem;
 }
 
 .ascent-curve-svg-wrap {
-  position: relative;
   width: 100%;
-  height: 220px;
+  height: 180px;
+  position: relative;
 }
 
 #ascentCurveSvg {
@@ -715,58 +745,76 @@ p, .body-copy {
 .ascent-stages-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-light);
+  gap: 20px;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-hairline);
 }
 
 .ascent-stage-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  opacity: 0.45;
+  gap: 6px;
+  opacity: 0.60; /* Inactive at ~60% ink, contrast >= 4.5:1 */
+  color: var(--ink-inactive);
   transform: translateY(8px);
-  transition: opacity 350ms var(--ease-trace), transform 350ms var(--ease-trace);
+  transition: opacity 350ms var(--ease-trace), transform 350ms var(--ease-trace), color 350ms var(--ease-trace);
 }
 
 .ascent-stage-item.reached {
   opacity: 1;
+  color: var(--ink-primary);
   transform: translateY(0);
 }
 
 .ascent-stage-sem {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  color: var(--brand-navy);
+  font-size: 12px;
   font-weight: 500;
+  color: var(--brand-navy);
 }
 
-.ascent-stage-name {
+.ascent-stage-item.reached .ascent-stage-sem {
+  color: var(--brand-red);
+}
+
+.ascent-stage-title {
   font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.35;
+  font-size: 14.5px;
+  font-weight: 600;
   color: var(--ink-primary);
 }
 
-/* Mobile vertical stage layout */
-@media (max-width: 768px) {
+.ascent-stage-topics {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-secondary);
+}
+
+/* Mobile vertical stages */
+@media (max-width: 860px) {
   .ascent-stages-grid {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 24px;
   }
 }
 
-/* --- 11. SECTION: STUDIOS (THREE EDITORIAL ROWS, NO CARDS) --- */
-.studios-section {
-  padding-top: clamp(4rem, 7vw, 6.5rem);
-  padding-bottom: clamp(4rem, 7vw, 6.5rem);
-  border-bottom: 1px solid var(--border-hairline);
+/* Stage separation flash */
+@keyframes stageFlash {
+  0% { stroke: var(--brand-red); stroke-width: 3.5; }
+  100% { stroke: #0F2756; stroke-width: 1.5; }
 }
 
-.section-header-block {
-  margin-bottom: 3.5rem;
+.stage-flash {
+  animation: stageFlash 200ms ease-out;
+}
+
+/* --- 14. SECTION: STUDIOS (ROW DIVIDER IS THE WAVEFORM) --- */
+.studios-section {
+  padding-top: clamp(4rem, 6vw, 6rem);
+  padding-bottom: clamp(4rem, 6vw, 6rem);
+  border-bottom: 1px solid var(--border-hairline);
 }
 
 .studios-list {
@@ -777,90 +825,71 @@ p, .body-copy {
 .studio-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
-  border-top: 1px solid var(--border-hairline);
+  gap: 28px;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
   transition: background-color var(--dur-fast) ease;
 }
 
 @media (min-width: 992px) {
   .studio-row {
-    grid-template-columns: 360px 1fr 180px;
+    grid-template-columns: 420px 1fr;
     align-items: center;
-    gap: 40px;
+    gap: 48px;
   }
 }
 
-.studio-row:last-child {
-  border-bottom: 1px solid var(--border-hairline);
-}
-
 .studio-row:hover {
-  background-color: rgba(244, 239, 230, 0.4);
+  background-color: rgba(244, 239, 230, 0.45);
 }
 
-.studio-photo-slot {
+/* Full-Row-Width Waveform Divider */
+.studio-wave-divider {
   width: 100%;
-  aspect-ratio: 16 / 10;
-  border: 1px solid var(--border-hairline);
-  background-color: var(--bg-surface-tint);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  text-align: center;
-  transition: transform 600ms var(--ease-trace);
+  height: 20px;
+  display: block;
+  overflow: visible;
 }
 
-.studio-row:hover .studio-photo-slot {
-  transform: scale(1.02);
+.studio-wave-path {
+  stroke: var(--brand-navy);
+  stroke-width: 1.25;
+  fill: none;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 700ms var(--ease-trace);
 }
 
 .studio-info {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
-.studio-waveform-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.studio-glyph-svg {
-  width: 140px;
-  height: 28px;
-  stroke: var(--brand-navy);
-  stroke-width: 1.5;
-  fill: none;
-}
-
-/* --- 12. SECTION: PROJECTS (BLUEPRINT OVERLAYS & ALTERNATING ROWS) --- */
+/* --- 15. SECTION: PROJECTS --- */
 .projects-section {
-  padding-top: clamp(4rem, 7vw, 6.5rem);
-  padding-bottom: clamp(4rem, 7vw, 6.5rem);
+  padding-top: clamp(4rem, 6vw, 6rem);
+  padding-bottom: clamp(4rem, 6vw, 6rem);
   border-bottom: 1px solid var(--border-hairline);
 }
 
 .projects-list {
   display: flex;
   flex-direction: column;
-  gap: 4.5rem;
+  gap: 5rem;
 }
 
 .project-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2.5rem;
+  gap: 32px;
   align-items: center;
 }
 
 @media (min-width: 992px) {
   .project-row {
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    gap: 48px;
   }
 
   .project-row.reversed {
@@ -872,53 +901,13 @@ p, .body-copy {
   }
 }
 
-/* Blueprint Line Drawing & Photo Fusion */
-.project-media-frame {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  border: 1px solid var(--border-hairline);
-  background-color: var(--bg-surface-tint);
-  overflow: hidden;
-}
-
-.project-photo-underlay {
-  position: absolute;
-  inset: 0;
+.project-content {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  text-align: center;
-  background-color: var(--bg-canvas-subtle);
-  background-image: 
-    linear-gradient(to right, rgba(226, 221, 213, 0.4) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(226, 221, 213, 0.4) 1px, transparent 1px);
-  background-size: 24px 24px;
-  transition: transform 600ms var(--ease-trace);
+  flex-direction: column;
+  gap: 16px;
 }
 
-.project-row:hover .project-photo-underlay {
-  transform: scale(1.02);
-}
-
-.project-blueprint-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 2;
-  stroke: var(--brand-navy);
-  stroke-width: 1.25;
-  fill: none;
-  transition: opacity 500ms var(--ease-trace);
-}
-
-.project-blueprint-svg path {
-  transition: stroke-dashoffset 20ms linear;
-}
-
+/* Callout tags inside project plate */
 .project-callouts {
   position: absolute;
   inset: 0;
@@ -935,24 +924,18 @@ p, .body-copy {
 .callout-label {
   position: absolute;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.05em;
   color: var(--brand-navy);
   background-color: rgba(250, 248, 244, 0.95);
-  padding: 2px 6px;
+  padding: 3px 8px;
   border: 1px solid var(--border-hairline);
 }
 
-.project-content {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* --- 13. AUDIENCE ROUTES --- */
+/* --- 16. SECTION: AUDIENCE ROUTES --- */
 .audience-section {
-  padding-top: clamp(3.5rem, 6vw, 5.5rem);
-  padding-bottom: clamp(3.5rem, 6vw, 5.5rem);
+  padding-top: clamp(3.5rem, 5vw, 5rem);
+  padding-bottom: clamp(3.5rem, 5vw, 5rem);
   border-bottom: 1px solid var(--border-hairline);
 }
 
@@ -984,10 +967,10 @@ p, .body-copy {
   color: var(--ink-primary);
 }
 
-/* --- 14. NEWS & EVENTS STRIP --- */
+/* --- 17. SECTION: NEWS BULLETIN --- */
 .news-section {
-  padding-top: clamp(3.5rem, 6vw, 5.5rem);
-  padding-bottom: clamp(3.5rem, 6vw, 5.5rem);
+  padding-top: clamp(3.5rem, 5vw, 5rem);
+  padding-bottom: clamp(3.5rem, 5vw, 5rem);
   border-bottom: 1px solid var(--border-hairline);
 }
 
@@ -1025,14 +1008,14 @@ p, .body-copy {
 
 .news-date {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
+  font-size: 12.5px;
   letter-spacing: 0.05em;
   color: var(--ink-muted);
 }
 
 .news-category {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
+  font-size: 11.5px;
   text-transform: uppercase;
   color: var(--brand-navy);
 }
@@ -1052,21 +1035,62 @@ p, .body-copy {
   color: var(--ink-secondary);
 }
 
-/* --- 15. PEOPLE SECTION (ONE LINE, NO FOREMAN/BIOS) --- */
+/* --- 18. SECTION: PEOPLE (AUTH FACULTY PORTRAITS, ZERO FOREMAN/BIOS) --- */
 .people-section {
-  padding-top: clamp(3.5rem, 6vw, 5rem);
-  padding-bottom: clamp(3.5rem, 6vw, 5rem);
+  padding-top: clamp(3.5rem, 5vw, 5rem);
+  padding-bottom: clamp(3.5rem, 5vw, 5rem);
   border-bottom: 1px solid var(--border-hairline);
 }
 
-.people-statement-block {
-  max-width: 880px;
+.people-faculty-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  margin-top: 2rem;
 }
 
-/* --- 16. CLOSING CTA & SLIM FOOTER --- */
+@media (min-width: 640px) {
+  .people-faculty-row {
+    grid-template-columns: 1fr 1fr;
+    max-width: 680px;
+  }
+}
+
+.faculty-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px;
+  border: 1px solid var(--border-hairline);
+  background-color: var(--bg-surface);
+}
+
+.faculty-photo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-hairline);
+  filter: grayscale(20%);
+}
+
+.faculty-info-name {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--ink-primary);
+}
+
+.faculty-info-role {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13.5px;
+  color: var(--ink-secondary);
+}
+
+/* --- 19. CLOSING CTA & SLIM FOOTER --- */
 .closing-cta-section {
-  padding-top: clamp(4.5rem, 8vw, 7rem);
-  padding-bottom: clamp(4.5rem, 8vw, 7rem);
+  padding-top: clamp(4rem, 6vw, 6rem);
+  padding-bottom: clamp(4rem, 6vw, 6rem);
   border-bottom: 1px solid var(--border-hairline);
   background-color: var(--bg-canvas-subtle);
 }
@@ -1099,7 +1123,7 @@ p, .body-copy {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .footer-logo-img {
@@ -1153,10 +1177,10 @@ p, .body-copy {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12px;
   color: var(--ink-muted);
-  margin-top: 1rem;
+  margin-top: 0.75rem;
 }
 
-/* --- 17. PREFERS-REDUCED-MOTION --- */
+/* --- 20. PREFERS-REDUCED-MOTION --- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -1165,7 +1189,7 @@ p, .body-copy {
     scroll-behavior: auto !important;
   }
 
-  .project-blueprint-svg path {
+  .studio-wave-path {
     stroke-dashoffset: 0 !important;
   }
 
