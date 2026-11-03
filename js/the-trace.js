@@ -229,91 +229,197 @@
       ctx.translate(x, y);
       ctx.rotate(angle);
 
-      ctx.strokeStyle = 'rgba(15, 39, 86, 0.95)';
-      ctx.lineWidth = 1.25;
-      ctx.fillStyle = '#FAF8F4';
+      const navy = 'rgba(15, 39, 86, 0.95)';
+      const red = '#BE1E2D';
+      const bg = '#FAF8F4';
 
-      // 4x4 Silhouette
+      ctx.strokeStyle = navy;
+      ctx.lineWidth = 1.25;
+      ctx.fillStyle = bg;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // 1. Rear mounted spare tire
       ctx.beginPath();
-      ctx.moveTo(-85, -12);
-      ctx.lineTo(-85, -34);
-      ctx.lineTo(-58, -50);
-      ctx.lineTo(8, -50);
-      ctx.lineTo(34, -26);
-      ctx.lineTo(76, -26);
-      ctx.lineTo(84, -12);
-      ctx.lineTo(60, -12);
-      ctx.arc(42, -12, 20, 0, Math.PI, true);
-      ctx.lineTo(-24, -12);
-      ctx.arc(-42, -12, 20, 0, Math.PI, true);
-      ctx.lineTo(-85, -12);
-      ctx.closePath();
+      ctx.arc(-82, -32, 13, 0, Math.PI * 2);
+      ctx.fillStyle = bg;
       ctx.fill();
       ctx.stroke();
 
-      // Window panes
       ctx.beginPath();
-      ctx.moveTo(-54, -46);
-      ctx.lineTo(-2, -46);
-      ctx.lineTo(-2, -28);
-      ctx.lineTo(-54, -28);
+      ctx.arc(-82, -32, 7, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // 2. Main 4x4 body silhouette
+      ctx.beginPath();
+      ctx.moveTo(-78, -15);
+      ctx.lineTo(-78, -54); // Tailgate
+      ctx.lineTo(-72, -56); // Roof rear curve
+      ctx.lineTo(8, -56);   // Main roofline
+      ctx.lineTo(28, -37);  // Windshield
+      ctx.lineTo(76, -35);  // Hood line (above arches)
+      ctx.lineTo(78, -34);  // Hood nose curve
+      ctx.lineTo(78, -20);  // Grille front
+      ctx.lineTo(82, -20);  // Front bumper top
+      ctx.lineTo(82, -14);  // Front bumper face
+      ctx.lineTo(72, -14);  // Front bumper lower skid
+
+      // Front wheel arch
+      ctx.lineTo(68, -15);
+      ctx.arc(46, -14, 20, 0, Math.PI, true);
+      ctx.lineTo(24, -15);
+
+      // Rocker panel between wheels
+      ctx.lineTo(-24, -15);
+
+      // Rear wheel arch
+      ctx.arc(-46, -14, 20, 0, Math.PI, true);
+      ctx.lineTo(-68, -15);
+
+      // Rear bumper step
+      ctx.lineTo(-80, -15);
+      ctx.lineTo(-80, -19);
+      ctx.lineTo(-78, -19);
+      ctx.closePath();
+      ctx.fillStyle = bg;
+      ctx.fill();
+      ctx.stroke();
+
+      // 3. Expedition roof rack
+      ctx.beginPath();
+      ctx.moveTo(-66, -60);
+      ctx.lineTo(4, -60);
+      ctx.lineWidth = 1.1;
+      ctx.stroke();
+      [-58, -27, 0].forEach((rx) => {
+        ctx.beginPath();
+        ctx.moveTo(rx, -56);
+        ctx.lineTo(rx, -60);
+        ctx.stroke();
+      });
+
+      // 4. Windows (proportional glasshouse)
+      ctx.lineWidth = 1.1;
+      // Rear cargo window
+      ctx.beginPath();
+      ctx.moveTo(-68, -52);
+      ctx.lineTo(-42, -52);
+      ctx.lineTo(-42, -39);
+      ctx.lineTo(-68, -39);
       ctx.closePath();
       ctx.stroke();
 
+      // Rear passenger window
       ctx.beginPath();
-      ctx.moveTo(3, -46);
-      ctx.lineTo(26, -28);
-      ctx.lineTo(3, -28);
+      ctx.moveTo(-38, -52);
+      ctx.lineTo(-8, -52);
+      ctx.lineTo(-8, -39);
+      ctx.lineTo(-38, -39);
       ctx.closePath();
       ctx.stroke();
 
-      // Door seam
+      // Front driver window
       ctx.beginPath();
-      ctx.moveTo(-4, -50);
-      ctx.lineTo(-4, -12);
+      ctx.moveTo(-4, -52);
+      ctx.lineTo(6, -52);
+      ctx.lineTo(24, -39);
+      ctx.lineTo(-4, -39);
+      ctx.closePath();
       ctx.stroke();
 
-      // Front & Rear Wheels (rotating proportional to speed)
-      [-42, 42].forEach((wx) => {
+      // 5. Body character lines & seams
+      // Shoulder crease
+      ctx.beginPath();
+      ctx.moveTo(-74, -36);
+      ctx.lineTo(74, -36);
+      ctx.lineWidth = 0.75;
+      ctx.strokeStyle = 'rgba(15, 39, 86, 0.45)';
+      ctx.stroke();
+
+      // Door seams
+      ctx.beginPath();
+      ctx.moveTo(-6, -56); ctx.lineTo(-6, -15);   // B-pillar
+      ctx.moveTo(-40, -56); ctx.lineTo(-40, -15); // C-pillar
+      ctx.moveTo(26, -37); ctx.lineTo(21, -15);   // A-pillar lower seam
+      ctx.lineWidth = 0.75;
+      ctx.strokeStyle = navy;
+      ctx.stroke();
+
+      // Flush door handles
+      ctx.lineWidth = 1.25;
+      ctx.beginPath();
+      ctx.moveTo(-30, -33); ctx.lineTo(-24, -33);
+      ctx.moveTo(4, -33); ctx.lineTo(10, -33);
+      ctx.stroke();
+
+      // Side mirror
+      ctx.beginPath();
+      ctx.moveTo(25, -40);
+      ctx.lineTo(29, -43);
+      ctx.lineTo(29, -38);
+      ctx.closePath();
+      ctx.stroke();
+
+      // 6. Wheels (rotating with speed)
+      [-46, 46].forEach((wx) => {
         ctx.save();
-        ctx.translate(wx, -12);
+        ctx.translate(wx, -14);
         ctx.rotate(wheelAngle);
 
+        // Outer tire
         ctx.beginPath();
         ctx.arc(0, 0, wheelRadius, 0, Math.PI * 2);
-        ctx.fillStyle = '#FAF8F4';
+        ctx.fillStyle = bg;
         ctx.fill();
-        ctx.strokeStyle = 'rgba(15, 39, 86, 0.95)';
-        ctx.lineWidth = 1.35;
+        ctx.lineWidth = 1.4;
+        ctx.strokeStyle = navy;
         ctx.stroke();
 
+        // Rim bead
         ctx.beginPath();
-        ctx.arc(0, 0, 7, 0, Math.PI * 2);
+        ctx.arc(0, 0, 8.5, 0, Math.PI * 2);
+        ctx.lineWidth = 0.85;
         ctx.stroke();
 
-        // 4 Spokes
+        // Center hub
         ctx.beginPath();
-        ctx.moveTo(-wheelRadius, 0); ctx.lineTo(wheelRadius, 0);
-        ctx.moveTo(0, -wheelRadius); ctx.lineTo(0, wheelRadius);
+        ctx.arc(0, 0, 3, 0, Math.PI * 2);
+        ctx.fillStyle = navy;
+        ctx.fill();
+
+        // 5 Alloy spokes
         ctx.lineWidth = 1;
-        ctx.stroke();
+        for (let s = 0; s < 5; s++) {
+          const a = (s * 2 * Math.PI) / 5;
+          ctx.beginPath();
+          ctx.moveTo(Math.cos(a) * 3, Math.sin(a) * 3);
+          ctx.lineTo(Math.cos(a) * 8.5, Math.sin(a) * 8.5);
+          ctx.stroke();
+        }
 
         ctx.restore();
       });
 
+      // 7. Headlight & Beam
+      // Circular bezel
+      ctx.beginPath();
+      ctx.arc(77, -26, 3, 0, Math.PI * 2);
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
       // Red headlight dot (#BE1E2D)
       ctx.beginPath();
-      ctx.arc(84, -20, 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = '#BE1E2D';
+      ctx.arc(77, -26, 2, 0, Math.PI * 2);
+      ctx.fillStyle = red;
       ctx.fill();
 
       // Subtle forward headlight beam
       ctx.beginPath();
-      ctx.moveTo(86, -20);
-      ctx.lineTo(140, -28);
-      ctx.lineTo(140, -12);
+      ctx.moveTo(80, -26);
+      ctx.lineTo(138, -36);
+      ctx.lineTo(138, -16);
       ctx.closePath();
-      ctx.fillStyle = 'rgba(190, 30, 45, 0.06)';
+      ctx.fillStyle = 'rgba(190, 30, 45, 0.08)';
       ctx.fill();
 
       ctx.restore();
