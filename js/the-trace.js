@@ -642,9 +642,9 @@
 
     const sections = [
       { id: 'hero', index: '01', name: 'Overview' },
-      { id: 'studios', index: '02', name: 'Studios' },
-      { id: 'projects', index: '03', name: 'Projects' },
-      { id: 'curriculum', index: '04', name: 'Curriculum' },
+      { id: 'curriculum', index: '02', name: 'Curriculum' },
+      { id: 'studios', index: '03', name: 'Studios' },
+      { id: 'projects', index: '04', name: 'Projects' },
       { id: 'news', index: '05', name: 'News' },
       { id: 'people', index: '06', name: 'People' }
     ];
@@ -672,13 +672,17 @@
         marker.style.top = `${currentY}px`;
 
         let activeSec = sections[0];
-        for (let i = sections.length - 1; i >= 0; i--) {
-          const sec = document.getElementById(sections[i].id);
-          if (sec) {
-            const rect = sec.getBoundingClientRect();
-            if (rect.top <= window.innerHeight * 0.45) {
-              activeSec = sections[i];
-              break;
+        if (window.innerHeight + scrollY >= document.documentElement.scrollHeight - 40) {
+          activeSec = sections[sections.length - 1];
+        } else {
+          for (let i = sections.length - 1; i >= 0; i--) {
+            const sec = document.getElementById(sections[i].id);
+            if (sec) {
+              const rect = sec.getBoundingClientRect();
+              if (rect.top <= window.innerHeight * 0.45) {
+                activeSec = sections[i];
+                break;
+              }
             }
           }
         }
@@ -793,23 +797,39 @@
     const trail = document.getElementById('ascentTrail');
     const rocket = document.getElementById('ascentRocketGlyph');
     const stageItems = document.querySelectorAll('.ascent-stage-item');
-    const stageTicks = document.querySelectorAll('.ascent-tick');
+    const stageTicks = document.querySelectorAll('.ascent-stage-tick, .ascent-tick');
 
     if (!svg || !path || !rocket) return;
+
+    if (trail) {
+      trail.setAttribute('pathLength', '1');
+    }
 
     const pathLength = path.getTotalLength ? path.getTotalLength() : 1000;
     const flashed = [false, false, false, false, false];
     const tickThresholds = [0.08, 0.28, 0.48, 0.68, 0.88];
 
     function checkAscent() {
-      const section = document.getElementById('curriculum');
-      if (!section) return;
+      if (prefersReducedMotion) {
+        const ptFinal = path.getPointAtLength(pathLength);
+        rocket.setAttribute('transform', `translate(${ptFinal.x}, ${ptFinal.y}) rotate(90)`);
+        if (trail) {
+          trail.setAttribute('pathLength', '1');
+          trail.style.strokeDasharray = '1';
+          trail.style.strokeDashoffset = '0';
+        }
+        stageItems.forEach((item) => item.classList.add('reached'));
+        return;
+      }
 
-      const rect = section.getBoundingClientRect();
+      const curveWrap = document.querySelector('.ascent-curve-svg-wrap') || svg;
+      const rect = curveWrap.getBoundingClientRect();
       const winH = window.innerHeight;
 
-      const startTrigger = winH * 0.85;
-      const endTrigger = winH * 0.20;
+      // Start climb as curve reaches comfortable reading zone (middle of viewport),
+      // finish as curve reaches top of viewport and 5 semester stages are centered
+      const startTrigger = winH * 0.52;
+      const endTrigger = winH * 0.02;
       const progress = Math.min(Math.max((startTrigger - rect.top) / (startTrigger - endTrigger), 0), 1);
 
       const currentDist = progress * pathLength;
@@ -827,14 +847,15 @@
 
       // Fading trailing path
       if (trail) {
+        trail.setAttribute('pathLength', '1');
         trail.style.strokeDasharray = '1';
         trail.style.strokeDashoffset = (1 - progress).toString();
       }
 
       // Check stage milestones
       tickThresholds.forEach((th, idx) => {
-        if (progress >= th || prefersReducedMotion) {
-          if (!flashed[idx] && !prefersReducedMotion && stageTicks[idx]) {
+        if (progress >= th) {
+          if (!flashed[idx] && stageTicks[idx]) {
             stageTicks[idx].classList.add('stage-flash');
             setTimeout(() => {
               if (stageTicks[idx]) stageTicks[idx].classList.remove('stage-flash');

@@ -283,6 +283,135 @@ async function runAllTests() {
     }
     await ctxAudit.close();
 
+    // -------------------------------------------------------------------------
+    // TEST 7: SPINE NAVIGATION SEQUENCE (01 -> 02 -> 03 -> 04 -> 05 -> 06)
+    // -------------------------------------------------------------------------
+    console.log('\n--- TEST 7: SPINE NAVIGATION SEQUENCE ---');
+    const ctxSpineSeq = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const pageSpineSeq = await ctxSpineSeq.newPage();
+    await pageSpineSeq.goto('http://localhost:5173/', { waitUntil: 'networkidle' });
+    await pageSpineSeq.evaluate(() => {
+      document.documentElement.style.scrollBehavior = 'auto';
+    });
+
+    const expectedSequence = [
+      { id: 'hero', expectedIndex: '01', expectedName: 'Overview' },
+      { id: 'curriculum', expectedIndex: '02', expectedName: 'Curriculum' },
+      { id: 'studios', expectedIndex: '03', expectedName: 'Studios' },
+      { id: 'projects', expectedIndex: '04', expectedName: 'Projects' },
+      { id: 'news', expectedIndex: '05', expectedName: 'News' },
+      { id: 'people', expectedIndex: '06', expectedName: 'People' }
+    ];
+
+    for (const item of expectedSequence) {
+      await pageSpineSeq.evaluate((targetId) => {
+        const el = document.getElementById(targetId);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          window.scrollBy(0, rect.top - 100);
+        }
+      }, item.id);
+      await pageSpineSeq.waitForTimeout(50);
+
+      const spineState = await pageSpineSeq.evaluate(() => {
+        const indexEl = document.getElementById('spineIndex');
+        const nameEl = document.getElementById('spineName');
+        return {
+          index: indexEl ? indexEl.textContent.trim() : null,
+          name: nameEl ? nameEl.textContent.trim() : null
+        };
+      });
+
+      if (spineState.index === item.expectedIndex) {
+        console.log(`PASS: #${item.id} matched spine index ${item.expectedIndex} (${item.expectedName})`);
+      } else {
+        console.error(`FAIL: #${item.id} got spine index ${spineState.index}, expected ${item.expectedIndex}`);
+        allPassed = false;
+      }
+    }
+    await ctxSpineSeq.close();
+
+    // -------------------------------------------------------------------------
+    // TEST 8: ROCKET ASCENT TRAJECTORY SCROLL SYNCHRONIZATION
+    // -------------------------------------------------------------------------
+    console.log('\n--- TEST 8: ROCKET ASCENT TRAJECTORY SCROLL SYNCHRONIZATION ---');
+    const ctxRocket = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const pageRocket = await ctxRocket.newPage();
+    await pageRocket.goto('http://localhost:5173/', { waitUntil: 'networkidle' });
+    await pageRocket.evaluate(() => {
+      document.documentElement.style.scrollBehavior = 'auto';
+    });
+
+    // Check early scroll state (curriculum top enters viewport)
+    await pageRocket.evaluate(() => {
+      const sec = document.getElementById('curriculum');
+      if (sec) {
+        const rect = sec.getBoundingClientRect();
+        window.scrollBy(0, rect.top - 50);
+      }
+    });
+    await pageRocket.waitForTimeout(50);
+
+    const rocketEarly = await pageRocket.evaluate(() => {
+      const trail = document.getElementById('ascentTrail');
+      const dashoffset = parseFloat(trail.style.strokeDashoffset || '1');
+      return {
+        progress: 1 - dashoffset,
+        pathLength: trail.getAttribute('pathLength')
+      };
+    });
+
+    console.log(`Rocket progress when curriculum reaches top of viewport: ${rocketEarly.progress.toFixed(3)}`);
+    if (rocketEarly.progress <= 0.35 && rocketEarly.pathLength === '1') {
+      console.log('PASS: Rocket is in early ascent phase and trail pathLength is 1');
+    } else {
+      console.error(`FAIL: Rocket early progress invalid (${rocketEarly.progress}) or pathLength missing`);
+      allPassed = false;
+    }
+
+    // Check midpoint
+    await pageRocket.evaluate(() => {
+      const curveWrap = document.querySelector('.ascent-curve-svg-wrap');
+      const cRect = curveWrap.getBoundingClientRect();
+      window.scrollBy(0, cRect.top - 243);
+    });
+    await pageRocket.waitForTimeout(50);
+
+    const rocketMid = await pageRocket.evaluate(() => {
+      const trail = document.getElementById('ascentTrail');
+      const dashoffset = parseFloat(trail.style.strokeDashoffset || '1');
+      return { progress: 1 - dashoffset };
+    });
+    console.log(`Rocket midpoint progress: ${rocketMid.progress.toFixed(3)}`);
+    if (rocketMid.progress >= 0.40 && rocketMid.progress <= 0.65) {
+      console.log('PASS: Rocket smoothly reaches midpoint of ascent curve');
+    } else {
+      console.error(`FAIL: Midpoint progress unexpected: ${rocketMid.progress}`);
+      allPassed = false;
+    }
+
+    // Check completed scroll
+    await pageRocket.evaluate(() => {
+      const sec = document.getElementById('studios');
+      const rect = sec.getBoundingClientRect();
+      window.scrollBy(0, rect.top);
+    });
+    await pageRocket.waitForTimeout(50);
+
+    const rocketEnd = await pageRocket.evaluate(() => {
+      const trail = document.getElementById('ascentTrail');
+      const dashoffset = parseFloat(trail.style.strokeDashoffset || '1');
+      return { progress: 1 - dashoffset };
+    });
+    console.log(`Rocket post-curriculum progress: ${rocketEnd.progress.toFixed(3)}`);
+    if (rocketEnd.progress === 1.0) {
+      console.log('PASS: Rocket completes ascent across all 5 semesters upon section exit');
+    } else {
+      console.error(`FAIL: Rocket end progress not 1.0: ${rocketEnd.progress}`);
+      allPassed = false;
+    }
+    await ctxRocket.close();
+
   } catch (err) {
     console.error('ERROR running tests:', err);
     allPassed = false;
