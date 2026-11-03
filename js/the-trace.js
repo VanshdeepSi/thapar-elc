@@ -138,7 +138,7 @@
     // Rocket Gravity-Turn Arc Position for progress p in [0, 1]
     function getRocketPosition(p) {
       const x = towerX + 320 * Math.pow(p, 1.4);
-      const y = platformY - 560 * p - 12 * Math.sin(Math.PI * p);
+      const y = (platformY - 24) - 560 * p - 12 * Math.sin(Math.PI * p);
       return { x, y };
     }
 
@@ -149,13 +149,23 @@
       return Math.atan2(p2.y - p1.y, p2.x - p1.x) + Math.PI / 2;
     }
 
-    // Draw Tower (~220px tall hairline legs)
+    // Draw Tower (~220px tall hairline legs ending on base plate sitting ON wave baseline)
     function drawTower(beaconBlink) {
       ctx.save();
+
+      const legSpread = 28;
+
+      // Small base plate sitting ON the wave's local baseline
+      ctx.beginPath();
+      ctx.moveTo(towerX - legSpread - 8, floorY);
+      ctx.lineTo(towerX + legSpread + 8, floorY);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(15, 39, 86, 0.85)';
+      ctx.stroke();
+
       ctx.strokeStyle = 'rgba(15, 39, 86, 0.45)';
       ctx.lineWidth = 1.25;
 
-      const legSpread = 28;
       // 4 Main Hairline Legs with Cross-bracing
       ctx.beginPath();
       // Outer legs
@@ -618,7 +628,14 @@
         }
       }
 
-      // 3. Draw Launch Tower (car passes in front of tower legs)
+      // 3. Update Tower geometry to sit ON wave's local baseline
+      floorY = getWaveY(towerX, midY, k0);
+      towerTopY = Math.max(20, floorY - 170);
+      platformY = towerTopY + 28;
+      if (rocketLaunchBtn) {
+        rocketLaunchBtn.style.top = `${towerTopY - 15}px`;
+        rocketLaunchBtn.style.height = `${floorY - towerTopY + 15}px`;
+      }
       drawTower(towerBeaconOn);
 
       // 4. Update and Draw 4x4 Car Profile
@@ -1054,6 +1071,14 @@
     initAscentCurve();
     initProjectDrawings();
     initMobileNav();
+
+    // Dev check: document.fonts.check('500 16px "IBM Plex Sans"')
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        const isLoaded = document.fonts.check('500 16px "IBM Plex Sans"');
+        console.log('[Dev Check] document.fonts.check(\'500 16px "IBM Plex Sans"\'):', isLoaded);
+      });
+    }
   }
 
   if (document.readyState === 'loading') {
