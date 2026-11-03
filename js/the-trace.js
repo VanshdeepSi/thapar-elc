@@ -851,9 +851,12 @@
 
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
       path.setAttribute('d', d);
-      path.setAttribute('pathLength', '1');
-      path.style.strokeDasharray = '1';
-      path.style.strokeDashoffset = '0';
+      path.removeAttribute('pathLength');
+      const len = Math.ceil(path.getTotalLength()) || 1800;
+      svg.style.setProperty('--wave-len', `${len}px`);
+      path.style.setProperty('--wave-len', `${len}px`);
+      path.style.strokeDasharray = `${len}px`;
+      path.style.strokeDashoffset = '0px';
     }
 
     function triggerWaveRedraw(wrap) {
@@ -864,6 +867,9 @@
       path.style.animation = 'none';
       void path.offsetWidth; // Force reflow to immediately restart redraw animation
       path.style.animation = 'waveDividerRedraw 700ms cubic-bezier(0.2, 0.7, 0.2, 1)';
+      path.addEventListener('animationend', () => {
+        path.style.animation = '';
+      }, { once: true });
     }
 
     dividers.forEach((svg) => drawWave(svg));
