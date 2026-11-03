@@ -499,19 +499,20 @@ p, .body-copy {
   border-radius: 50%;
   background-color: var(--brand-red);
   transform: translateY(-50%);
-  transition: top 80ms linear;
-  pointer-events: none;
+  transition: top 60ms linear;
+  pointer-events: auto;
 }
 
 .spine-node {
   position: absolute;
-  left: 10px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   cursor: pointer;
   outline: none;
+  pointer-events: auto;
 }
 
 .spine-index {
@@ -522,6 +523,7 @@ p, .body-copy {
   letter-spacing: 0.08em;
   color: var(--brand-navy);
   white-space: nowrap;
+  line-height: 1;
 }
 
 .spine-name {

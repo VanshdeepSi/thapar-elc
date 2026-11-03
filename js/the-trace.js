@@ -826,10 +826,10 @@
       const rect = curveWrap.getBoundingClientRect();
       const winH = window.innerHeight;
 
-      // Start climb as curve reaches comfortable reading zone (middle of viewport),
-      // finish as curve reaches top of viewport and 5 semester stages are centered
-      const startTrigger = winH * 0.52;
-      const endTrigger = winH * 0.02;
+      // Start climb as curve enters view in lower viewport,
+      // finish while curve is still fully visible below fixed header (~72px)
+      const startTrigger = winH * 0.80;
+      const endTrigger = Math.max(winH * 0.25, 140);
       const progress = Math.min(Math.max((startTrigger - rect.top) / (startTrigger - endTrigger), 0), 1);
 
       const currentDist = progress * pathLength;

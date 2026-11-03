@@ -342,12 +342,13 @@ async function runAllTests() {
       document.documentElement.style.scrollBehavior = 'auto';
     });
 
-    // Check early scroll state (curriculum top enters viewport)
+    // Check early scroll state (curve entering lower viewport)
     await pageRocket.evaluate(() => {
-      const sec = document.getElementById('curriculum');
-      if (sec) {
-        const rect = sec.getBoundingClientRect();
-        window.scrollBy(0, rect.top - 50);
+      const curveWrap = document.querySelector('.ascent-curve-svg-wrap');
+      if (curveWrap) {
+        const cRect = curveWrap.getBoundingClientRect();
+        // Position curve top at 680px in 900px viewport (lower view, startTrigger is 720px)
+        window.scrollBy(0, cRect.top - 680);
       }
     });
     await pageRocket.waitForTimeout(50);
@@ -361,19 +362,20 @@ async function runAllTests() {
       };
     });
 
-    console.log(`Rocket progress when curriculum reaches top of viewport: ${rocketEarly.progress.toFixed(3)}`);
-    if (rocketEarly.progress <= 0.35 && rocketEarly.pathLength === '1') {
-      console.log('PASS: Rocket is in early ascent phase and trail pathLength is 1');
+    console.log(`Rocket progress when curve enters lower viewport: ${rocketEarly.progress.toFixed(3)}`);
+    if (rocketEarly.progress <= 0.15 && rocketEarly.pathLength === '1') {
+      console.log('PASS: Rocket starts at SEM I as curve enters lower view, pathLength is 1');
     } else {
       console.error(`FAIL: Rocket early progress invalid (${rocketEarly.progress}) or pathLength missing`);
       allPassed = false;
     }
 
-    // Check midpoint
+    // Check midpoint (curve centered in viewport)
     await pageRocket.evaluate(() => {
       const curveWrap = document.querySelector('.ascent-curve-svg-wrap');
       const cRect = curveWrap.getBoundingClientRect();
-      window.scrollBy(0, cRect.top - 243);
+      // Midpoint between 720px and 225px is 472.5px
+      window.scrollBy(0, cRect.top - 472.5);
     });
     await pageRocket.waitForTimeout(50);
 
@@ -383,34 +385,101 @@ async function runAllTests() {
       return { progress: 1 - dashoffset };
     });
     console.log(`Rocket midpoint progress: ${rocketMid.progress.toFixed(3)}`);
-    if (rocketMid.progress >= 0.40 && rocketMid.progress <= 0.65) {
-      console.log('PASS: Rocket smoothly reaches midpoint of ascent curve');
+    if (rocketMid.progress >= 0.45 && rocketMid.progress <= 0.55) {
+      console.log('PASS: Rocket smoothly reaches midpoint (SEM III) when curve is centered');
     } else {
       console.error(`FAIL: Midpoint progress unexpected: ${rocketMid.progress}`);
       allPassed = false;
     }
 
-    // Check completed scroll
+    // Check completed scroll (curve at 225px, fully visible below 72px header)
     await pageRocket.evaluate(() => {
-      const sec = document.getElementById('studios');
-      const rect = sec.getBoundingClientRect();
-      window.scrollBy(0, rect.top);
+      const curveWrap = document.querySelector('.ascent-curve-svg-wrap');
+      const cRect = curveWrap.getBoundingClientRect();
+      window.scrollBy(0, cRect.top - 225);
     });
     await pageRocket.waitForTimeout(50);
 
     const rocketEnd = await pageRocket.evaluate(() => {
+      const curveWrap = document.querySelector('.ascent-curve-svg-wrap');
+      const cRect = curveWrap.getBoundingClientRect();
       const trail = document.getElementById('ascentTrail');
       const dashoffset = parseFloat(trail.style.strokeDashoffset || '1');
-      return { progress: 1 - dashoffset };
+      return {
+        progress: 1 - dashoffset,
+        curveTop: cRect.top,
+        isBelowHeader: cRect.top >= 72,
+        isInViewport: cRect.bottom <= 900
+      };
     });
-    console.log(`Rocket post-curriculum progress: ${rocketEnd.progress.toFixed(3)}`);
-    if (rocketEnd.progress === 1.0) {
-      console.log('PASS: Rocket completes ascent across all 5 semesters upon section exit');
+    console.log(`Rocket completion state: progress=${rocketEnd.progress.toFixed(3)}, curveTop=${rocketEnd.curveTop}px, belowHeader=${rocketEnd.isBelowHeader}`);
+    if (rocketEnd.progress >= 0.99 && rocketEnd.isBelowHeader && rocketEnd.isInViewport) {
+      console.log('PASS: Rocket animation completes while curve is 100% visible on screen (NOT above screen or behind header)');
     } else {
-      console.error(`FAIL: Rocket end progress not 1.0: ${rocketEnd.progress}`);
+      console.error(`FAIL: Rocket completion state invalid:`, rocketEnd);
       allPassed = false;
     }
     await ctxRocket.close();
+
+    // -------------------------------------------------------------------------
+    // TEST 9: PAGE NUMBER MOVES IN LOCKSTEP WITH RED DOT
+    // -------------------------------------------------------------------------
+    console.log('\n--- TEST 9: PAGE NUMBER MOVES WITH RED DOT ---');
+    const ctxSpineMove = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const pageSpineMove = await ctxSpineMove.newPage();
+    await pageSpineMove.goto('http://localhost:5173/', { waitUntil: 'networkidle' });
+    await pageSpineMove.evaluate(() => {
+      document.documentElement.style.scrollBehavior = 'auto';
+    });
+
+    const scrollTargets = [0, 800, 1600, 2400];
+    let spineMovePassed = true;
+    let initialLabelTop = null;
+
+    for (const sY of scrollTargets) {
+      await pageSpineMove.evaluate((y) => window.scrollTo(0, y), sY);
+      await pageSpineMove.waitForTimeout(100);
+
+      const positions = await pageSpineMove.evaluate(() => {
+        const marker = document.getElementById('spineMarker');
+        const label = document.getElementById('spineLabel');
+        const indexEl = document.getElementById('spineIndex');
+        const mRect = marker.getBoundingClientRect();
+        const lRect = label.getBoundingClientRect();
+        return {
+          markerCenterY: mRect.top + mRect.height / 2,
+          labelCenterY: lRect.top + lRect.height / 2,
+          indexText: indexEl ? indexEl.textContent.trim() : null
+        };
+      });
+
+      if (initialLabelTop === null) {
+        initialLabelTop = positions.labelCenterY;
+      }
+
+      const diff = Math.abs(positions.markerCenterY - positions.labelCenterY);
+      console.log(`Scroll Y=${sY}px: Marker center=${positions.markerCenterY.toFixed(1)}px, Label center=${positions.labelCenterY.toFixed(1)}px, Diff=${diff.toFixed(1)}px (Index=${positions.indexText})`);
+
+      // Label must be vertically aligned with the red dot within 8px
+      if (diff > 8) {
+        console.error(`FAIL at scrollY=${sY}px: Label and marker vertical desync (${diff.toFixed(1)}px)`);
+        spineMovePassed = false;
+      }
+    }
+
+    // Verify label actually moved (not stuck at 50% viewport height = 450px)
+    const finalLabelPos = await pageSpineMove.evaluate(() => {
+      const label = document.getElementById('spineLabel');
+      return label.getBoundingClientRect().top;
+    });
+    console.log(`Initial label top: ${initialLabelTop.toFixed(1)}px, Final label top at Y=2400px: ${finalLabelPos.toFixed(1)}px`);
+    if (Math.abs(finalLabelPos - initialLabelTop) > 100 && spineMovePassed) {
+      console.log('PASS: Page number moves smoothly with red dot across all scroll depths');
+    } else {
+      console.error('FAIL: Page number did not move with red dot');
+      allPassed = false;
+    }
+    await ctxSpineMove.close();
 
   } catch (err) {
     console.error('ERROR running tests:', err);
