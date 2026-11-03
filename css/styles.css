@@ -60,6 +60,7 @@
   --bg-canvas-subtle: #F4EFE6;
   --bg-surface: #FFFFFF;
   --bg-surface-tint: #F2EDE4;
+  --paper-2: #F2EDE4;
 
   --ink-primary: #14171C;
   --ink-secondary: #383E48; /* Contrast >= 7:1 on #FAF8F4 */
@@ -332,6 +333,12 @@ p, .body-copy {
   padding-right: clamp(1.5rem, 3vw, 2rem);
 }
 
+@media (min-width: 1280px) and (max-width: 1400px) {
+  .site-container {
+    max-width: min(var(--container-max), calc(100vw - 160px));
+  }
+}
+
 /* Hairline Grid Dividers */
 .hairline-divider {
   width: 100%;
@@ -464,16 +471,16 @@ p, .body-copy {
   }
 }
 
-/* --- 8. THE SPINE (CONTAINER-LEFT - 40PX, >= 1280PX ONLY) --- */
+/* --- 8. THE SPINE (CONTAINER-LEFT - 56PX, >= 1280PX ONLY) --- */
 .trace-spine {
   position: fixed;
   top: 0;
   bottom: 0;
-  left: calc((100vw - var(--container-max)) / 2 - 40px);
+  left: calc((100vw - var(--container-max)) / 2 - 56px);
   width: 1px;
   background-color: rgba(226, 221, 213, 0.75);
   z-index: 90;
-  pointer-events: none;
+  pointer-events: auto;
   display: none;
 }
 
@@ -493,25 +500,53 @@ p, .body-copy {
   background-color: var(--brand-red);
   transform: translateY(-50%);
   transition: top 80ms linear;
+  pointer-events: none;
 }
 
-.spine-node-label {
+.spine-node {
   position: absolute;
-  left: 14px;
+  left: 10px;
   top: 50%;
   transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  outline: none;
+}
+
+.spine-index {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11.5px;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--brand-navy);
   white-space: nowrap;
-  opacity: 0;
-  transition: opacity 250ms var(--ease-trace);
 }
 
-.spine-node-label.visible {
+.spine-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  writing-mode: vertical-rl;
+  margin-top: 6px;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.trace-spine:hover .spine-name,
+.spine-node:hover .spine-name,
+.spine-node:focus-visible .spine-name {
   opacity: 1;
+}
+
+.spine-node:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 3px;
 }
 
 /* Mobile 2px Top Progress Bar */
@@ -576,22 +611,155 @@ p, .body-copy {
   gap: 28px;
 }
 
-/* Hero Signature Scene ("THE TRACE" Wave + Car + Rocket Pad) */
+/* Hero Signature Scene ("THE TRACE" Wave + Car + Rocket Tower) */
 .hero-signature-scene {
   position: relative;
   width: 100%;
-  height: 200px;
+  height: 270px;
   margin-top: auto;
-  pointer-events: none;
   z-index: 5;
-  -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
 }
 
 #heroWaveCanvas {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+/* Interactive Rocket Launch Tower Button */
+.rocket-tower-btn {
+  position: absolute;
+  top: 15px;
+  right: calc((100% - min(var(--container-max), 100%)) / 2 + 10%);
+  width: 70px;
+  height: 235px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 15;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  outline: none;
+}
+
+.rocket-tower-btn:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* Tower Mono Hint: "Launch" (>= 12px) */
+.tower-launch-hint {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-red);
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-hairline);
+  padding: 2px 7px;
+  border-radius: 2px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity var(--dur-fast) var(--ease-trace), transform var(--dur-fast) var(--ease-trace);
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.rocket-tower-btn:hover .tower-launch-hint,
+.rocket-tower-btn:focus-visible .tower-launch-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tower-tooltip {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink-secondary);
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-hairline);
+  padding: 4px 8px;
+  border-radius: 2px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-trace);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.rocket-tower-btn:hover .tower-tooltip,
+.rocket-tower-btn:focus-visible .tower-tooltip {
+  opacity: 1;
+}
+
+/* Focusable Interactive Car Area */
+.hero-car-interactive {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 190px;
+  height: 60px;
+  margin-left: -95px;
+  margin-top: -30px;
+  cursor: pointer;
+  z-index: 12;
+  outline: none;
+}
+
+.hero-car-interactive:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.car-tooltip {
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink-secondary);
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-hairline);
+  padding: 4px 8px;
+  border-radius: 2px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-trace);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.hero-car-interactive:hover .car-tooltip,
+.hero-car-interactive:focus-visible .car-tooltip {
+  opacity: 1;
+}
+
+/* Tiny 12px Sans Muted Wave Caption */
+.hero-scene-caption {
+  position: absolute;
+  bottom: 8px;
+  left: clamp(24px, 4vw, 48px);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink-muted);
+  pointer-events: none;
+  z-index: 10;
 }
 
 /* --- 10. STATS & HERO PHOTO BENCH (MOVED BELOW THE FOLD) --- */
@@ -618,10 +786,10 @@ p, .body-copy {
 .technical-plate-container {
   position: relative;
   width: 100%;
-  border: 1px solid var(--border-hairline);
+  border: none;
   background-color: var(--bg-canvas-subtle);
   overflow: hidden;
-  box-shadow: inset 0 0 0 1px rgba(226, 221, 213, 0.4);
+  box-shadow: inset 0 0 0 1px var(--border-hairline);
 }
 
 .hero-plate-aspect {
@@ -631,7 +799,7 @@ p, .body-copy {
 }
 
 .standard-plate-aspect {
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 8 / 5;
   min-height: 240px;
 }
 
@@ -810,6 +978,14 @@ p, .body-copy {
   animation: stageFlash 200ms ease-out;
 }
 
+.ascent-curve-caption {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink-muted);
+  margin-top: 1rem;
+}
+
 /* --- 14. SECTION: STUDIOS (ROW DIVIDER IS THE WAVEFORM) --- */
 .studios-section {
   padding-top: clamp(4rem, 6vw, 6rem);
@@ -823,12 +999,13 @@ p, .body-copy {
 }
 
 .studio-row {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr;
   gap: 28px;
   padding-top: 3rem;
   padding-bottom: 3rem;
-  transition: background-color var(--dur-fast) ease;
+  /* Strictly NO layout changes on hover: no border, padding, margin, width, or transform */
 }
 
 @media (min-width: 992px) {
@@ -839,16 +1016,55 @@ p, .body-copy {
   }
 }
 
-.studio-row:hover {
-  background-color: rgba(244, 239, 230, 0.45);
+/* Highlight ::before pseudo-element */
+.studio-row::before {
+  content: '';
+  position: absolute;
+  inset: 0 -24px;
+  background: var(--paper-2, #F2EDE4);
+  opacity: 0;
+  transition: opacity 250ms var(--ease-trace);
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 2px;
+}
+
+@media (hover: hover) {
+  .studio-row:hover::before {
+    opacity: 1;
+  }
+}
+
+.studio-row:focus-within::before {
+  opacity: 1;
+}
+
+.studio-row:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 4px;
+}
+
+/* Studio Image Slot: Fixed 8/5 aspect ratio, 1px outline via inset box-shadow (never border) */
+.studio-row .technical-plate-container {
+  aspect-ratio: 8 / 5 !important;
+  box-shadow: inset 0 0 0 1px var(--border-hairline) !important;
+  border: none !important;
 }
 
 /* Full-Row-Width Waveform Divider */
+.studio-divider-wrap {
+  position: relative;
+  width: 100%;
+  pointer-events: none;
+  padding: 8px 0;
+}
+
 .studio-wave-divider {
   width: 100%;
   height: 20px;
   display: block;
   overflow: visible;
+  pointer-events: none;
 }
 
 .studio-wave-path {
@@ -857,7 +1073,34 @@ p, .body-copy {
   fill: none;
   stroke-dasharray: 1;
   stroke-dashoffset: 0;
-  transition: stroke-dashoffset 700ms var(--ease-trace);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .studio-row:hover .studio-wave-path,
+  .studio-row:hover + .studio-divider-wrap .studio-wave-path {
+    animation: waveDividerRedraw 700ms var(--ease-trace) forwards;
+  }
+}
+
+@keyframes waveDividerRedraw {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.studio-divider-label {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-top: 4px;
+  pointer-events: none;
 }
 
 .studio-info {

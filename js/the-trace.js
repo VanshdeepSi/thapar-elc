@@ -1,11 +1,8 @@
 /**
- * THE TRACE · Experiential Learning Centre (ELC), TIET Patiala
- * Restrained editorial animation suite:
- * 1. Hero Signature Scene: Harmonics Wave (n=1,2,3 @ 28% + sum line) + 4x4 Car + Rocket Launch Arc
- * 2. Dynamic Studio Waveform Row Dividers (Sawtooth, Sine, PWM Square with whole cycles)
- * 3. Semester Ascent Trajectory Curve with Red Rocket Glyph & Stage Separation Flash
- * 4. Technical Blueprint Scrubbing with Engineering Callouts
- * 5. Left Spine Navigation positioned at (containerLeft - 40px)
+ * EXPERIENTIAL LEARNING CENTRE (ELC) · THAPAR INSTITUTE
+ * "THE TRACE" RELIABILITY RUNTIME & INTERACTIVE SIGNATURE SCENE
+ * Fix Pass 3: Performance.now()-based motion, 56px/s continuous car,
+ * gravity-turn rocket with tower, 56px gutter spine, whole-cycle studio waveforms.
  */
 
 (function () {
@@ -14,7 +11,7 @@
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ---------------------------------------------------------------------------
-  // 1. HERO SIGNATURE SCENE: WAVE + CAR + ROCKET
+  // 1. HERO SIGNATURE SCENE: "THE TRACE" (PERFORMANCE.NOW TIMED MOTION)
   // ---------------------------------------------------------------------------
   function initHeroSignatureScene() {
     const canvas = document.getElementById('heroWaveCanvas');
@@ -25,54 +22,93 @@
     let height = 0;
     let dpr = 1;
     let animId = null;
-    let isVisible = true;
+    let isHeroVisible = true;
 
     // Harmonic wave parameters (fundamental ~1100px)
     const baseWavelength = 1100;
-    const amplitudes = [40, 20, 13]; // n=1, n=2, n=3
+    const amplitudes = [38, 19, 12]; // n=1, n=2, n=3
     const speeds = [0.12, -0.17, 0.22]; // rad/s
     let phases = [0, 0, 0];
 
     // Pointer frequency shift (max 12%, lerp 0.05)
     let targetFreqMod = 1.0;
     let currentFreqMod = 1.0;
-
-    // Scroll fade
     let scrollFade = 1.0;
 
-    // Vehicle state ("Only one vehicle moves at a time")
-    // 0: Initial wait before rocket (900ms)
-    // 1: Rocket launching & climbing gravity turn (~2.8s)
-    // 2: Rocket exited; Car now active and traversing wave
-    let vehicleState = prefersReducedMotion ? 2 : 0;
-    let stateTime = 0;
-
-    // Rocket parameters (Pad at far right)
-    let rocketLaunchTime = 0.9; // 900ms
-    let rocketFlightDuration = 2.8; // seconds
-    let rocketPadX = 0;
-    let rocketPadY = 0;
-    let rocketArcFinished = prefersReducedMotion;
-
-    // Car parameters (4x4 off-road profile ~180px)
+    // CAR:
+    // At t=0: car ALREADY visible at ~14% of hero width, driving left to right at ~56px/s.
+    // Never start off-screen. Re-enters from left edge on exit.
     const carWidth = 180;
-    const carHeight = 56;
-    let carX = prefersReducedMotion ? 120 : -240;
-    const carSpeed = 40; // px/s (~45s loop across screen)
+    const carSpeed = 56.0; // px/s
+    const wheelRadius = 14;
+    let carX = 0;
+    let carInitialSet = false;
+    let carPitch = 0;
     let wheelAngle = 0;
+
+    // ROCKET & LAUNCH TOWER:
+    // Stands on raised launch tower at ~84% container width, visible at t=0.
+    // Tower is ~220px tall hairline legs; car passes in front of the tower.
+    let towerX = 0;
+    let floorY = 0;
+    let towerTopY = 0;
+    let platformY = 0;
+
+    // Timeline variables
+    const cycleDuration = 24.0; // Relaunch every 24s (+/- 3s jitter)
+    let elapsedSceneTime = 0.0;
+    let isMidFlight = false;
+
+    // Interactive button & hit elements
+    const rocketLaunchBtn = document.getElementById('rocketLaunchBtn');
+    const heroCarInteractive = document.getElementById('heroCarInteractive');
+
+    // Accelerating ease: cubic-bezier(.4, 0, .9, .5)
+    function solveCubicBezier(t, p1x, p1y, p2x, p2y) {
+      if (t <= 0) return 0;
+      if (t >= 1) return 1;
+      let u = t;
+      for (let i = 0; i < 8; i++) {
+        const oneMinusU = 1 - u;
+        const x = 3 * oneMinusU * oneMinusU * u * p1x + 3 * oneMinusU * u * u * p2x + u * u * u;
+        const dx = 3 * oneMinusU * oneMinusU * p1x + 6 * oneMinusU * u * (p2x - p1x) + 3 * u * u * (1 - p2x);
+        if (Math.abs(x - t) < 1e-5 || Math.abs(dx) < 1e-6) break;
+        u -= (x - t) / dx;
+        u = Math.max(0, Math.min(1, u));
+      }
+      const oneMinusU = 1 - u;
+      return 3 * oneMinusU * oneMinusU * u * p1y + 3 * oneMinusU * u * u * p2y + u * u * u;
+    }
 
     function resize() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = canvas.parentElement.offsetWidth;
       height = canvas.parentElement.offsetHeight;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
       canvas.style.width = width + 'px';
       canvas.style.height = height + 'px';
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
 
-      rocketPadX = width - 110;
-      rocketPadY = height * 0.55;
+      // Initialize car at 14% on first layout
+      if (!carInitialSet && width > 0) {
+        carX = width * 0.14;
+        carInitialSet = true;
+      }
+
+      // Tower geometry: ~84% of width
+      towerX = Math.round(width * 0.84);
+      floorY = height * 0.90;
+      towerTopY = Math.max(25, floorY - 180);
+      platformY = towerTopY + 28;
+
+      if (rocketLaunchBtn) {
+        rocketLaunchBtn.style.left = `${towerX - 35}px`;
+        rocketLaunchBtn.style.right = 'auto';
+        rocketLaunchBtn.style.top = `${towerTopY - 15}px`;
+        rocketLaunchBtn.style.height = `${floorY - towerTopY + 30}px`;
+      }
     }
 
     function updateScrollFade() {
@@ -91,7 +127,7 @@
       }
     }
 
-    // Helper to evaluate sum wave at x
+    // Evaluate sum wave at horizontal coordinate x
     function getWaveY(x, midY, k0) {
       const y1 = amplitudes[0] * scrollFade * Math.sin(1 * k0 * x + phases[0]);
       const y2 = amplitudes[1] * scrollFade * Math.sin(2 * k0 * x + phases[1]);
@@ -99,39 +135,116 @@
       return midY + (y1 + y2 + y3);
     }
 
-    // Draw Hairline 4x4 Car Profile
+    // Rocket Gravity-Turn Arc Position for progress p in [0, 1]
+    function getRocketPosition(p) {
+      const x = towerX + 320 * Math.pow(p, 1.4);
+      const y = platformY - 560 * p - 12 * Math.sin(Math.PI * p);
+      return { x, y };
+    }
+
+    function getRocketTangent(p) {
+      const step = 0.01;
+      const p1 = getRocketPosition(Math.max(0, p - step));
+      const p2 = getRocketPosition(Math.min(1, p + step));
+      return Math.atan2(p2.y - p1.y, p2.x - p1.x) + Math.PI / 2;
+    }
+
+    // Draw Tower (~220px tall hairline legs)
+    function drawTower(beaconBlink) {
+      ctx.save();
+      ctx.strokeStyle = 'rgba(15, 39, 86, 0.45)';
+      ctx.lineWidth = 1.25;
+
+      const legSpread = 28;
+      // 4 Main Hairline Legs with Cross-bracing
+      ctx.beginPath();
+      // Outer legs
+      ctx.moveTo(towerX - legSpread, floorY);
+      ctx.lineTo(towerX - 10, towerTopY);
+      ctx.moveTo(towerX + legSpread, floorY);
+      ctx.lineTo(towerX + 10, towerTopY);
+      // Inner depth legs
+      ctx.moveTo(towerX - legSpread * 0.6, floorY);
+      ctx.lineTo(towerX - 5, towerTopY);
+      ctx.moveTo(towerX + legSpread * 0.6, floorY);
+      ctx.lineTo(towerX + 5, towerTopY);
+
+      // Horizontal cross beams
+      const levels = [0.25, 0.5, 0.75, 1.0];
+      levels.forEach((lvl) => {
+        const y = floorY - (floorY - towerTopY) * lvl;
+        const w = legSpread * (1 - lvl * 0.65);
+        ctx.moveTo(towerX - w, y);
+        ctx.lineTo(towerX + w, y);
+      });
+
+      // Diagonal cross-bracing (X-bracing)
+      for (let i = 0; i < levels.length - 1; i++) {
+        const yBot = floorY - (floorY - towerTopY) * levels[i];
+        const yTop = floorY - (floorY - towerTopY) * levels[i + 1];
+        const wBot = legSpread * (1 - levels[i] * 0.65);
+        const wTop = legSpread * (1 - levels[i + 1] * 0.65);
+        ctx.moveTo(towerX - wBot, yBot);
+        ctx.lineTo(towerX + wTop, yTop);
+        ctx.moveTo(towerX + wBot, yBot);
+        ctx.lineTo(towerX - wTop, yTop);
+      }
+
+      // Launch platform deck
+      ctx.moveTo(towerX - 22, platformY);
+      ctx.lineTo(towerX + 22, platformY);
+
+      // Umbilical service arm
+      ctx.moveTo(towerX + 10, platformY - 26);
+      ctx.lineTo(towerX + 2, platformY - 26);
+      ctx.stroke();
+
+      // Mast
+      ctx.beginPath();
+      ctx.moveTo(towerX, towerTopY);
+      ctx.lineTo(towerX, towerTopY - 14);
+      ctx.stroke();
+
+      // Tower beacon light (blinks 3x before launch)
+      ctx.beginPath();
+      ctx.arc(towerX, towerTopY - 14, 2.5, 0, Math.PI * 2);
+      if (beaconBlink) {
+        ctx.fillStyle = '#BE1E2D';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(towerX, towerTopY - 14, 6, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(190, 30, 45, 0.25)';
+        ctx.fill();
+      } else {
+        ctx.fillStyle = 'rgba(15, 39, 86, 0.3)';
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    // Draw Hairline 4x4 Car Profile (passes in FRONT of tower legs)
     function drawCar(x, y, angle) {
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(angle);
 
-      // Navy hairline chassis stroke
-      ctx.strokeStyle = 'rgba(15, 39, 86, 0.9)';
+      ctx.strokeStyle = 'rgba(15, 39, 86, 0.95)';
       ctx.lineWidth = 1.25;
       ctx.fillStyle = '#FAF8F4';
 
       // 4x4 Silhouette
       ctx.beginPath();
-      // Start rear bumper
       ctx.moveTo(-85, -12);
       ctx.lineTo(-85, -34);
-      // Rear roof pillar
       ctx.lineTo(-58, -50);
-      // Roofline
       ctx.lineTo(8, -50);
-      // Windshield slope
       ctx.lineTo(34, -26);
-      // Hood
       ctx.lineTo(76, -26);
-      // Grille / front bumper
       ctx.lineTo(84, -12);
-      // Underside
       ctx.lineTo(60, -12);
-      // Front wheel arch
       ctx.arc(42, -12, 20, 0, Math.PI, true);
-      // Mid chassis
       ctx.lineTo(-24, -12);
-      // Rear wheel arch
       ctx.arc(-42, -12, 20, 0, Math.PI, true);
       ctx.lineTo(-85, -12);
       ctx.closePath();
@@ -160,8 +273,7 @@
       ctx.lineTo(-4, -12);
       ctx.stroke();
 
-      // Front & Rear Wheels (radius 14px, rotating)
-      const wheelRadius = 14;
+      // Front & Rear Wheels (rotating proportional to speed)
       [-42, 42].forEach((wx) => {
         ctx.save();
         ctx.translate(wx, -12);
@@ -171,11 +283,10 @@
         ctx.arc(0, 0, wheelRadius, 0, Math.PI * 2);
         ctx.fillStyle = '#FAF8F4';
         ctx.fill();
-        ctx.strokeStyle = 'rgba(15, 39, 86, 0.9)';
+        ctx.strokeStyle = 'rgba(15, 39, 86, 0.95)';
         ctx.lineWidth = 1.35;
         ctx.stroke();
 
-        // Inner rim
         ctx.beginPath();
         ctx.arc(0, 0, 7, 0, Math.PI * 2);
         ctx.stroke();
@@ -209,22 +320,22 @@
     }
 
     // Draw Hairline Rocket
-    function drawRocket(rx, ry, angle, isLaunching) {
+    function drawRocket(rx, ry, angle, opacity, isLaunching) {
+      if (opacity <= 0.01) return;
       ctx.save();
+      ctx.globalAlpha = Math.min(Math.max(opacity, 0), 1);
       ctx.translate(rx, ry);
       ctx.rotate(angle);
 
-      ctx.strokeStyle = 'rgba(15, 39, 86, 0.9)';
+      ctx.strokeStyle = 'rgba(15, 39, 86, 0.92)';
       ctx.lineWidth = 1.25;
       ctx.fillStyle = '#FAF8F4';
 
       // Rocket fuselage (~90px tall, 18px wide)
       ctx.beginPath();
-      // Nose cone
       ctx.moveTo(0, -50);
       ctx.lineTo(9, -28);
       ctx.lineTo(9, 24);
-      // Engine nozzle
       ctx.lineTo(5, 34);
       ctx.lineTo(-5, 34);
       ctx.lineTo(-9, 24);
@@ -254,41 +365,53 @@
       ctx.fill();
       ctx.stroke();
 
-      // Stage separation ring
+      // Stage line
       ctx.beginPath();
       ctx.moveTo(-9, 0);
       ctx.lineTo(9, 0);
       ctx.stroke();
 
-      // Engine plume during flight
+      // Engine plume during active launch
       if (isLaunching) {
         ctx.beginPath();
         ctx.moveTo(-5, 34);
         ctx.lineTo(0, 52 + Math.random() * 8);
         ctx.lineTo(5, 34);
-        ctx.fillStyle = 'rgba(190, 30, 45, 0.4)';
+        ctx.fillStyle = 'rgba(190, 30, 45, 0.5)';
         ctx.fill();
       }
 
       ctx.restore();
     }
 
-    // Gravity turn arc path evaluation
-    function getRocketPosition(u) {
-      // u from 0 to 1
-      const x = rocketPadX + 280 * Math.pow(u, 1.45);
-      const y = (rocketPadY - 24) - 560 * u;
-      return { x, y };
+    // Manual Launch Trigger (button click/tap/enter)
+    function triggerManualLaunch() {
+      if (isMidFlight || prefersReducedMotion) return;
+      // Start countdown: set current cycle time to 1.2s (blinks 3x, ignites at 2.0s)
+      const currentCycleBase = Math.floor(elapsedSceneTime / cycleDuration) * cycleDuration;
+      elapsedSceneTime = currentCycleBase + 1.2;
+    }
+
+    if (rocketLaunchBtn) {
+      rocketLaunchBtn.addEventListener('click', triggerManualLaunch);
+      rocketLaunchBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          triggerManualLaunch();
+        }
+      });
     }
 
     let lastTime = performance.now();
 
     function render(currentTime) {
-      const dt = Math.min((currentTime - lastTime) / 1000, 0.1);
+      // Clamp dt to 50ms so returning to tab causes no jump
+      const rawDt = (currentTime - lastTime) / 1000;
+      const dt = Math.min(Math.max(rawDt, 0), 0.05);
       lastTime = currentTime;
-      stateTime += dt;
 
-      if (!prefersReducedMotion) {
+      if (!prefersReducedMotion && isHeroVisible) {
+        elapsedSceneTime += dt;
         phases[0] += speeds[0] * dt;
         phases[1] += speeds[1] * dt;
         phases[2] += speeds[2] * dt;
@@ -300,7 +423,7 @@
       const midY = height * 0.58;
       const k0 = (2 * Math.PI) / (baseWavelength * currentFreqMod);
 
-      // 1. Draw Individual Harmonics at 28% Opacity (clearly visible)
+      // 1. Draw Harmonics at 28% Opacity (clearly visible)
       const step = 4;
       const harmonicColors = [
         'rgba(15, 39, 86, 0.28)',
@@ -334,24 +457,93 @@
       }
       ctx.stroke();
 
-      // 3. Rocket Launch Pad & Gravity Turn Arc
-      // Pad structure at right
-      const padY = getWaveY(rocketPadX, midY, k0);
-      ctx.strokeStyle = 'rgba(15, 39, 86, 0.45)';
-      ctx.lineWidth = 1.25;
-      ctx.beginPath();
-      ctx.moveTo(rocketPadX - 24, padY);
-      ctx.lineTo(rocketPadX + 24, padY);
-      // Gantry mast
-      ctx.moveTo(rocketPadX + 22, padY);
-      ctx.lineTo(rocketPadX + 22, padY - 75);
-      ctx.lineTo(rocketPadX + 6, padY - 60);
-      ctx.stroke();
+      // Rocket Timeline State Evaluation
+      const tCycle = prefersReducedMotion ? 0 : (elapsedSceneTime % cycleDuration);
+      let towerBeaconOn = false;
+      let rocketOpacity = 0;
+      let rocketInFlight = false;
+      let flightProgress = 0;
+      let trailAlpha = 0;
 
-      // Dashed gravity-turn trajectory arc
+      if (prefersReducedMotion) {
+        rocketOpacity = 1;
+        rocketInFlight = false;
+      } else {
+        if (tCycle < 1.2) {
+          // Standing on pad
+          rocketOpacity = 1;
+          towerBeaconOn = false;
+          isMidFlight = false;
+        } else if (tCycle < 2.0) {
+          // t=1.2s: Tower light blinks 3x
+          rocketOpacity = 1;
+          const blinkPhase = (tCycle - 1.2) / 0.8; // 0 to 1 over 0.8s
+          towerBeaconOn = Math.sin(blinkPhase * Math.PI * 6) > 0;
+          isMidFlight = false;
+        } else if (tCycle < 8.0) {
+          // t=2.0s: Ignition; 6s flight to t=8s
+          isMidFlight = true;
+          rocketInFlight = true;
+          rocketOpacity = 1;
+          const flightTau = (tCycle - 2.0) / 6.0;
+          flightProgress = solveCubicBezier(flightTau, 0.4, 0, 0.9, 0.5);
+          trailAlpha = 0.5;
+        } else if (tCycle < 13.0) {
+          // t=8s: Exited top-right; trail fading over 5s into permanent 12% dashed arc
+          isMidFlight = false;
+          rocketOpacity = 0;
+          const fadeProgress = (tCycle - 8.0) / 5.0;
+          trailAlpha = Math.max(0.12, 0.5 * (1 - fadeProgress));
+        } else if (tCycle < 16.0) {
+          // Pad empty, waiting
+          isMidFlight = false;
+          rocketOpacity = 0;
+          trailAlpha = 0.12;
+        } else if (tCycle < 17.2) {
+          // t=16s: New rocket fades onto pad (1.2s)
+          isMidFlight = false;
+          rocketOpacity = (tCycle - 16.0) / 1.2;
+          trailAlpha = 0.12;
+        } else {
+          // Rocket docked and waiting for relaunch at ~24s
+          isMidFlight = false;
+          rocketOpacity = 1;
+          trailAlpha = 0.12;
+        }
+      }
+
+      // 3. Draw Launch Tower (car passes in front of tower legs)
+      drawTower(towerBeaconOn);
+
+      // 4. Update and Draw 4x4 Car Profile
+      if (!prefersReducedMotion) {
+        carX += carSpeed * dt;
+        wheelAngle += (carSpeed * dt) / wheelRadius;
+        if (carX > width + carWidth) {
+          carX = -carWidth;
+        }
+      }
+
+      // Lerp car pitch to wave tangent
+      const curY = getWaveY(carX, midY, k0);
+      const aheadY = getWaveY(carX + 14, midY, k0);
+      const behindY = getWaveY(carX - 14, midY, k0);
+      const targetSlope = Math.atan2(aheadY - behindY, 28);
+      carPitch += (targetSlope - carPitch) * Math.min(1.0, 10.0 * dt);
+
+      // Car passes in FRONT of tower legs
+      drawCar(carX, curY, carPitch);
+
+      // Sync interactive car hit box
+      if (heroCarInteractive) {
+        heroCarInteractive.style.transform = `translate(${carX}px, ${curY}px) rotate(${carPitch}rad)`;
+        heroCarInteractive.style.display = (carX >= -carWidth && carX <= width + carWidth) ? 'block' : 'none';
+      }
+
+      // 5. Draw Permanent 12% Dashed Gravity-Turn Arc
       ctx.save();
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(15, 39, 86, 0.12)'; // 12% opacity persistent arc
+      ctx.strokeStyle = 'rgba(15, 39, 86, 0.12)';
       ctx.lineWidth = 1.25;
       ctx.setLineDash([4, 4]);
       for (let u = 0; u <= 1.0; u += 0.02) {
@@ -362,63 +554,32 @@
       ctx.stroke();
       ctx.restore();
 
-      // State Machine for Vehicles ("Only one moves at a time")
-      if (vehicleState === 0) {
-        // Rocket waiting on pad before launch
-        drawRocket(rocketPadX, padY - 24, 0, false);
-
-        if (stateTime >= rocketLaunchTime && !prefersReducedMotion) {
-          vehicleState = 1;
-          stateTime = 0;
-        }
-      } else if (vehicleState === 1) {
-        // Rocket launching and climbing arc
-        const progress = Math.min(stateTime / rocketFlightDuration, 1.0);
-        const p = getRocketPosition(progress);
-        const pNext = getRocketPosition(Math.min(progress + 0.02, 1.0));
-        const tangentAngle = Math.atan2(pNext.y - p.y, pNext.x - p.x) + Math.PI / 2;
-
-        drawRocket(p.x, p.y, tangentAngle, true);
-
-        // Rocket exhaust trail along arc
+      // 6. Draw Rocket Active Exhaust Trail during/after flight
+      if (trailAlpha > 0.01 && (rocketInFlight || tCycle >= 8.0)) {
         ctx.save();
         ctx.beginPath();
-        ctx.strokeStyle = 'rgba(190, 30, 45, 0.4)';
+        ctx.strokeStyle = `rgba(190, 30, 45, ${trailAlpha})`;
         ctx.lineWidth = 1.5;
-        for (let u = 0; u <= progress; u += 0.02) {
-          const tp = getRocketPosition(u);
-          if (u === 0) ctx.moveTo(tp.x, tp.y);
-          else ctx.lineTo(tp.x, tp.y);
+        const maxP = rocketInFlight ? flightProgress : 1.0;
+        for (let u = 0; u <= maxP; u += 0.02) {
+          const p = getRocketPosition(u);
+          if (u === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
         }
         ctx.stroke();
         ctx.restore();
-
-        if (progress >= 1.0) {
-          vehicleState = 2; // Rocket exited; Car can now move!
-          stateTime = 0;
-          rocketArcFinished = true;
-        }
-      } else if (vehicleState === 2) {
-        // Rocket has departed; car rides the wave
-        if (!prefersReducedMotion) {
-          carX += carSpeed * dt;
-          wheelAngle += 2.5 * dt;
-
-          if (carX > width + carWidth) {
-            carX = -carWidth;
-          }
-        }
-
-        // Sample slope tangent for car
-        const curY = getWaveY(carX, midY, k0);
-        const aheadY = getWaveY(carX + 12, midY, k0);
-        const behindY = getWaveY(carX - 12, midY, k0);
-        const slopeAngle = Math.atan2(aheadY - behindY, 24);
-
-        drawCar(carX, curY, slopeAngle);
       }
 
-      if (isVisible) {
+      // 7. Draw Rocket (on pad or mid-flight)
+      if (rocketInFlight) {
+        const pos = getRocketPosition(flightProgress);
+        const tangent = getRocketTangent(flightProgress);
+        drawRocket(pos.x, pos.y, tangent, rocketOpacity, true);
+      } else if (rocketOpacity > 0.01) {
+        drawRocket(towerX, platformY - 24, 0, rocketOpacity, false);
+      }
+
+      if (isHeroVisible) {
         animId = requestAnimationFrame(render);
       }
     }
@@ -429,20 +590,37 @@
       targetFreqMod = 1.0 + (xNorm - 0.5) * 0.24;
     }, { passive: true });
 
-    const observer = new IntersectionObserver((entries) => {
+    // Pause when hero is less than 50% visible; resume with rocket on pad
+    const heroSection = document.getElementById('hero');
+    const heroObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        isVisible = entry.isIntersecting;
-        if (isVisible && !animId) {
-          lastTime = performance.now();
-          animId = requestAnimationFrame(render);
-        } else if (!isVisible && animId) {
-          cancelAnimationFrame(animId);
-          animId = null;
+        const wasVisible = isHeroVisible;
+        isHeroVisible = entry.intersectionRatio >= 0.5;
+        if (isHeroVisible) {
+          if (!wasVisible) {
+            lastTime = performance.now();
+            const cyclePos = elapsedSceneTime % cycleDuration;
+            if (cyclePos >= 8.0 && cyclePos < 16.0) {
+              const base = Math.floor(elapsedSceneTime / cycleDuration) * cycleDuration;
+              elapsedSceneTime = base + 17.5; // Resume with rocket on pad
+            }
+          }
+          if (!animId) {
+            animId = requestAnimationFrame(render);
+          }
+        } else {
+          if (animId) {
+            cancelAnimationFrame(animId);
+            animId = null;
+          }
         }
       });
-    }, { threshold: 0.05 });
+    }, { threshold: [0, 0.5, 1.0] });
 
-    observer.observe(canvas);
+    if (heroSection) {
+      heroObserver.observe(heroSection);
+    }
+
     window.addEventListener('resize', resize, { passive: true });
     window.addEventListener('scroll', updateScrollFade, { passive: true });
 
@@ -452,30 +630,31 @@
   }
 
   // ---------------------------------------------------------------------------
-  // 2. THE SPINE (CONTAINER-LEFT - 40PX, >= 1280PX ONLY)
+  // 2. THE SPINE (CONTAINER-LEFT - 56PX, >= 1280PX ONLY)
   // ---------------------------------------------------------------------------
   function initSpine() {
     const spine = document.getElementById('traceSpine');
     const marker = document.getElementById('spineMarker');
-    const label = document.getElementById('spineLabel');
+    const indexSpan = document.getElementById('spineIndex');
+    const nameSpan = document.getElementById('spineName');
     const mobileBar = document.getElementById('traceMobileBar');
     const container = document.querySelector('.site-container');
 
     const sections = [
-      { id: 'hero', name: '01 Overview' },
-      { id: 'studios', name: '02 Studios' },
-      { id: 'projects', name: '03 Projects' },
-      { id: 'curriculum', name: '04 Curriculum' },
-      { id: 'news', name: '05 News' },
-      { id: 'people', name: '06 People' }
+      { id: 'hero', index: '01', name: 'Overview' },
+      { id: 'studios', index: '02', name: 'Studios' },
+      { id: 'projects', index: '03', name: 'Projects' },
+      { id: 'curriculum', index: '04', name: 'Curriculum' },
+      { id: 'news', index: '05', name: 'News' },
+      { id: 'people', index: '06', name: 'People' }
     ];
 
     function update() {
-      // Reposition spine to (containerLeft - 40px)
+      // Reposition spine to (containerLeft - 56px)
       if (spine && container && window.innerWidth >= 1280) {
         const cRect = container.getBoundingClientRect();
-        const leftPos = Math.max(16, cRect.left - 40);
-        spine.style.left = leftPos + 'px';
+        const leftPos = Math.max(12, Math.round(cRect.left - 56));
+        spine.style.left = `${leftPos}px`;
       }
 
       const scrollY = window.scrollY || window.pageYOffset;
@@ -490,28 +669,22 @@
         const spineTop = 85;
         const spineBottom = window.innerHeight - 80;
         const currentY = spineTop + (spineBottom - spineTop) * scrollProgress;
-        marker.style.top = currentY + 'px';
+        marker.style.top = `${currentY}px`;
 
-        let activeName = '';
+        let activeSec = sections[0];
         for (let i = sections.length - 1; i >= 0; i--) {
           const sec = document.getElementById(sections[i].id);
           if (sec) {
             const rect = sec.getBoundingClientRect();
             if (rect.top <= window.innerHeight * 0.45) {
-              activeName = sections[i].name;
+              activeSec = sections[i];
               break;
             }
           }
         }
 
-        if (label) {
-          if (activeName) {
-            label.textContent = activeName;
-            label.classList.add('visible');
-          } else {
-            label.classList.remove('visible');
-          }
-        }
+        if (indexSpan) indexSpan.textContent = activeSec.index;
+        if (nameSpan) nameSpan.textContent = activeSec.name;
       }
     }
 
@@ -542,7 +715,6 @@
       let d = `M 0 ${midY} `;
 
       if (type === 'sawtooth') {
-        // Sawtooth torque wave (rises sharply, falls back)
         for (let i = 0; i < numCycles; i++) {
           const startX = i * exactCycleW;
           const peakX = startX + exactCycleW * 0.75;
@@ -550,7 +722,6 @@
           d += `L ${peakX} 2 L ${peakX} 18 L ${endX} ${midY} `;
         }
       } else if (type === 'sine') {
-        // Sine wave
         for (let i = 0; i < numCycles; i++) {
           const startX = i * exactCycleW;
           const cp1X = startX + exactCycleW * 0.25;
@@ -560,7 +731,6 @@
           d += `C ${cp1X} 1, ${cp1X} 1, ${midX} ${midY} C ${cp2X} 19, ${cp2X} 19, ${endX} ${midY} `;
         }
       } else if (type === 'pwm') {
-        // PWM square pulse
         for (let i = 0; i < numCycles; i++) {
           const startX = i * exactCycleW;
           const highX = startX + exactCycleW * 0.45;
@@ -579,17 +749,19 @@
     dividers.forEach((svg) => drawWave(svg));
     window.addEventListener('resize', () => dividers.forEach((svg) => drawWave(svg)), { passive: true });
 
-    // Redraw on hover (700ms)
+    // Redraw on hover (700ms from 1 to 0 dashoffset) and never hide it
     studioRows.forEach((row) => {
       row.addEventListener('mouseenter', () => {
         if (prefersReducedMotion) return;
-        const divider = row.nextElementSibling && row.nextElementSibling.classList.contains('studio-wave-divider')
-          ? row.nextElementSibling
-          : row.previousElementSibling && row.previousElementSibling.classList.contains('studio-wave-divider')
-            ? row.previousElementSibling
+        const prevWrap = row.previousElementSibling;
+        const nextWrap = row.nextElementSibling;
+        const wrap = (nextWrap && nextWrap.classList.contains('studio-divider-wrap'))
+          ? nextWrap
+          : (prevWrap && prevWrap.classList.contains('studio-divider-wrap'))
+            ? prevWrap
             : null;
-        if (!divider) return;
-        const path = divider.querySelector('path');
+        if (!wrap) return;
+        const path = wrap.querySelector('.studio-wave-path');
         if (!path) return;
 
         path.style.transition = 'none';
@@ -602,27 +774,21 @@
   }
 
   // ---------------------------------------------------------------------------
-  // 4. SEMESTER ASCENT CURVE (RED ROCKET GLYPH & STAGE SEPARATION FLASH)
+  // 4. FULL-WIDTH SEMESTER ASCENT TRAJECTORY (NO DASHBOARD BOX)
   // ---------------------------------------------------------------------------
   function initAscentCurve() {
     const svg = document.getElementById('ascentCurveSvg');
     const path = document.getElementById('ascentPath');
-    const rocket = document.getElementById('ascentRocketGlyph');
     const trail = document.getElementById('ascentTrail');
+    const rocket = document.getElementById('ascentRocketGlyph');
     const stageItems = document.querySelectorAll('.ascent-stage-item');
-    const stageTicks = document.querySelectorAll('.ascent-stage-tick');
+    const stageTicks = document.querySelectorAll('.ascent-tick');
 
     if (!svg || !path || !rocket) return;
 
-    let pathLength = 500;
-    try {
-      pathLength = path.getTotalLength();
-    } catch (e) {
-      pathLength = 500;
-    }
-
-    const tickThresholds = [0.10, 0.30, 0.50, 0.70, 0.90];
+    const pathLength = path.getTotalLength ? path.getTotalLength() : 1000;
     const flashed = [false, false, false, false, false];
+    const tickThresholds = [0.08, 0.28, 0.48, 0.68, 0.88];
 
     function checkAscent() {
       const section = document.getElementById('curriculum');
@@ -631,7 +797,6 @@
       const rect = section.getBoundingClientRect();
       const winH = window.innerHeight;
 
-      // Progress through section (0 to 1)
       const startTrigger = winH * 0.85;
       const endTrigger = winH * 0.20;
       const progress = Math.min(Math.max((startTrigger - rect.top) / (startTrigger - endTrigger), 0), 1);
@@ -651,7 +816,6 @@
 
       // Fading trailing path
       if (trail) {
-        trail.setAttribute('pathLength', '1');
         trail.style.strokeDasharray = '1';
         trail.style.strokeDashoffset = (1 - progress).toString();
       }
@@ -687,9 +851,8 @@
 
     function checkDrawings() {
       projectRows.forEach((row) => {
-        const svg = row.querySelector('.plate-svg-art');
         const callouts = row.querySelector('.project-callouts');
-        if (!svg) return;
+        if (!callouts) return;
 
         const rect = row.getBoundingClientRect();
         const winH = window.innerHeight;
@@ -698,13 +861,10 @@
         const currentDistance = winH - rect.top;
         const progress = Math.min(Math.max(currentDistance / totalDistance, 0), 1);
 
-        // Callouts fade in at ~55%
-        if (callouts) {
-          if (progress >= 0.52 || prefersReducedMotion) {
-            callouts.classList.add('visible');
-          } else {
-            callouts.classList.remove('visible');
-          }
+        if (progress >= 0.52 || prefersReducedMotion) {
+          callouts.classList.add('visible');
+        } else {
+          callouts.classList.remove('visible');
         }
       });
     }
@@ -718,18 +878,18 @@
   // 6. ACCESSIBLE MOBILE DRAWER NAVIGATION
   // ---------------------------------------------------------------------------
   function initMobileNav() {
-    const toggleBtn = document.getElementById('mobileNavToggle');
+    const toggle = document.getElementById('mobileNavToggle');
     const drawer = document.getElementById('mobileNavDrawer');
-    if (!toggleBtn || !drawer) return;
+    if (!toggle || !drawer) return;
 
-    toggleBtn.addEventListener('click', () => {
+    toggle.addEventListener('click', () => {
       const isOpen = drawer.classList.contains('open');
       if (isOpen) {
         drawer.classList.remove('open');
-        toggleBtn.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-expanded', 'false');
       } else {
         drawer.classList.add('open');
-        toggleBtn.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-expanded', 'true');
       }
     });
 
@@ -737,7 +897,7 @@
     mobileLinks.forEach((link) => {
       link.addEventListener('click', () => {
         drawer.classList.remove('open');
-        toggleBtn.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-expanded', 'false');
       });
     });
   }
@@ -759,4 +919,5 @@
   } else {
     init();
   }
+
 })();

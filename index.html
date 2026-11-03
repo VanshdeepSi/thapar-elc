@@ -25,10 +25,12 @@
   <!-- Mobile Scroll Progress Indicator (2px Top Bar) -->
   <div id="traceMobileBar" class="trace-mobile-bar" aria-hidden="true"></div>
 
-  <!-- Desktop Vertical Spine Navigation (containerLeft - 40px, >= 1280px) -->
-  <aside id="traceSpine" class="trace-spine" aria-hidden="true">
-    <div id="spineMarker" class="spine-marker">
-      <span id="spineLabel" class="spine-node-label font-mono">01 OVERVIEW</span>
+  <!-- Desktop Vertical Spine Navigation (containerLeft - 56px, >= 1280px) -->
+  <aside id="traceSpine" class="trace-spine" aria-label="Page section progress">
+    <div id="spineMarker" class="spine-marker"></div>
+    <div id="spineLabel" class="spine-node" tabindex="0">
+      <span id="spineIndex" class="spine-index font-mono">01</span>
+      <span id="spineName" class="spine-name font-mono">Overview</span>
     </div>
   </aside>
 
@@ -105,9 +107,25 @@
 
       </div>
 
-      <!-- Hero Signature Scene: "THE TRACE" (Wave + 4x4 Car + Rocket Launch Pad) -->
+      <!-- Hero Signature Scene: "THE TRACE" (Wave + 4x4 Car + Rocket Launch Tower) -->
       <div class="hero-signature-scene" aria-label="Interactive harmonics waveform and engineering mechanism animation">
         <canvas id="heroWaveCanvas"></canvas>
+
+        <!-- Interactive Rocket Launch Tower Button -->
+        <button id="rocketLaunchBtn" class="rocket-tower-btn" aria-label="Launch the rocket">
+          <span class="tower-launch-hint font-mono">Launch</span>
+          <span class="tower-tooltip font-sans">Flight systems. VFS 2025: 3rd worldwide.</span>
+        </button>
+
+        <!-- Focusable Interactive Car Area -->
+        <div id="heroCarInteractive" class="hero-car-interactive" tabindex="0" role="img" aria-label="THAR-eV: diesel-to-electric conversion.">
+          <span class="car-tooltip font-sans">THAR-eV: diesel-to-electric conversion.</span>
+        </div>
+
+        <!-- Wave Scene Caption (12px sans, muted) -->
+        <div class="hero-scene-caption font-sans">
+          Three simple waves, one signal: complex systems built from basics.
+        </div>
       </div>
     </section>
 
@@ -136,37 +154,152 @@
           </div>
         </div>
 
-        <!-- Hero Technical Plate: Central Workbench Prototyping Bay -->
-        <div class="technical-plate-container hero-plate-aspect" role="img" aria-label="Technical architectural drawing of central workbench assembly bay in Block B119">
+        <!-- Hero Technical Plate: Central Workbench Bays -->
+        <div class="technical-plate-container hero-plate-aspect" role="img" aria-label="Technical architectural drawing of central workbench bays">
           <div class="technical-plate-drawing">
-            <svg class="plate-svg-art" viewBox="0 0 800 280">
-              <!-- Grid background lines -->
-              <line x1="40" y1="230" x2="760" y2="230" stroke="#0F2756" stroke-width="1.5" />
-              <!-- Workbench stations -->
-              <rect x="80" y="160" width="180" height="70" stroke-width="1.25" />
-              <line x1="80" y1="190" x2="260" y2="190" stroke-dasharray="4 4" />
-              <rect x="310" y="160" width="180" height="70" stroke-width="1.25" />
-              <line x1="310" y1="190" x2="490" y2="190" stroke-dasharray="4 4" />
-              <rect x="540" y="160" width="180" height="70" stroke-width="1.25" />
-              <line x1="540" y1="190" x2="720" y2="190" stroke-dasharray="4 4" />
-              <!-- Overhead power drops -->
-              <line x1="170" y1="20" x2="170" y2="160" stroke-width="1.25" />
-              <circle cx="170" cy="140" r="6" />
-              <line x1="400" y1="20" x2="400" y2="160" stroke-width="1.25" />
-              <circle cx="400" cy="140" r="6" />
-              <line x1="630" y1="20" x2="630" y2="160" stroke-width="1.25" />
-              <circle cx="630" cy="140" r="6" />
-              <!-- Oscilloscope outline on bench 2 -->
-              <rect x="340" y="125" width="45" height="35" />
-              <rect x="345" y="130" width="22" height="18" />
-              <!-- Soldering station on bench 1 -->
-              <rect x="110" y="138" width="30" height="22" />
-              <line x1="140" y1="150" x2="160" y2="155" />
+            <svg class="plate-svg-art" viewBox="0 0 800 320">
+              <!-- Ceiling line with architectural diagonal hatching -->
+              <line x1="40" y1="36" x2="760" y2="36" stroke="#0F2756" stroke-width="1.25" />
+              <!-- Ceiling hatching -->
+              <line x1="60" y1="36" x2="72" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="90" y1="36" x2="102" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="120" y1="36" x2="132" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="150" y1="36" x2="162" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="180" y1="36" x2="192" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="210" y1="36" x2="222" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="240" y1="36" x2="252" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="270" y1="36" x2="282" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="300" y1="36" x2="312" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="330" y1="36" x2="342" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="360" y1="36" x2="372" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="390" y1="36" x2="402" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="420" y1="36" x2="432" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="450" y1="36" x2="462" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="480" y1="36" x2="492" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="510" y1="36" x2="522" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="540" y1="36" x2="552" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="570" y1="36" x2="582" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="600" y1="36" x2="612" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="630" y1="36" x2="642" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="660" y1="36" x2="672" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="690" y1="36" x2="702" y2="24" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="720" y1="36" x2="732" y2="24" stroke="#0F2756" stroke-width="0.75" />
+
+              <!-- Floor line (2px only) -->
+              <line x1="40" y1="240" x2="760" y2="240" stroke="#0F2756" stroke-width="2" />
+
+              <!-- Overhead power drops to small junction boxes -->
+              <!-- Drop 1 -->
+              <line x1="170" y1="36" x2="170" y2="105" stroke="#0F2756" stroke-width="1.25" />
+              <rect x="163" y="105" width="14" height="10" stroke="#0F2756" stroke-width="1.25" fill="#FAF8F4" />
+              <line x1="170" y1="115" x2="170" y2="156" stroke="#0F2756" stroke-width="0.75" stroke-dasharray="2 3" />
+
+              <!-- Drop 2 -->
+              <line x1="400" y1="36" x2="400" y2="105" stroke="#0F2756" stroke-width="1.25" />
+              <rect x="393" y="105" width="14" height="10" stroke="#0F2756" stroke-width="1.25" fill="#FAF8F4" />
+              <line x1="400" y1="115" x2="400" y2="156" stroke="#0F2756" stroke-width="0.75" stroke-dasharray="2 3" />
+
+              <!-- Drop 3 -->
+              <line x1="630" y1="36" x2="630" y2="105" stroke="#0F2756" stroke-width="1.25" />
+              <rect x="623" y="105" width="14" height="10" stroke="#0F2756" stroke-width="1.25" fill="#FAF8F4" />
+              <line x1="630" y1="115" x2="630" y2="156" stroke="#0F2756" stroke-width="0.75" stroke-dasharray="2 3" />
+
+              <!-- WORKBENCH 1: Soldering Station Bay -->
+              <rect x="80" y="156" width="180" height="10" stroke="#0F2756" stroke-width="1.25" fill="#FAF8F4" />
+              <line x1="86" y1="166" x2="86" y2="240" stroke="#0F2756" stroke-width="1.25" />
+              <line x1="254" y1="166" x2="254" y2="240" stroke="#0F2756" stroke-width="1.25" />
+              <line x1="86" y1="228" x2="254" y2="228" stroke="#0F2756" stroke-width="0.75" />
+              <!-- Drawer unit (dashed drawer outlines) -->
+              <rect x="196" y="166" width="54" height="58" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <line x1="196" y1="185" x2="250" y2="185" stroke="#0F2756" stroke-width="0.75" stroke-dasharray="3 2" />
+              <line x1="196" y1="204" x2="250" y2="204" stroke="#0F2756" stroke-width="0.75" stroke-dasharray="3 2" />
+              <line x1="220" y1="175" x2="226" y2="175" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="220" y1="194" x2="226" y2="194" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="220" y1="213" x2="226" y2="213" stroke="#0F2756" stroke-width="0.75" />
+              <!-- Stool -->
+              <ellipse cx="140" cy="204" rx="16" ry="3" stroke="#0F2756" stroke-width="0.75" fill="#FAF8F4" />
+              <line x1="140" y1="207" x2="140" y2="240" stroke="#0F2756" stroke-width="0.75" />
+              <ellipse cx="140" cy="238" rx="12" ry="2" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <!-- Equipment: Soldering station console & cradle -->
+              <rect x="104" y="134" width="28" height="22" stroke="#0F2756" stroke-width="0.75" fill="#FAF8F4" />
+              <circle cx="118" cy="145" r="4" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <line x1="134" y1="152" x2="146" y2="136" stroke="#0F2756" stroke-width="0.75" />
+              <circle cx="160" cy="148" r="7" stroke="#0F2756" stroke-width="0.75" fill="none" />
+
+              <!-- WORKBENCH 2: Test Instrument (Oscilloscope) Bay -->
+              <rect x="310" y="156" width="180" height="10" stroke="#0F2756" stroke-width="1.25" fill="#FAF8F4" />
+              <line x1="316" y1="166" x2="316" y2="240" stroke="#0F2756" stroke-width="1.25" />
+              <line x1="484" y1="166" x2="484" y2="240" stroke="#0F2756" stroke-width="1.25" />
+              <line x1="316" y1="228" x2="484" y2="228" stroke="#0F2756" stroke-width="0.75" />
+              <!-- Drawer unit -->
+              <rect x="320" y="166" width="54" height="58" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <line x1="320" y1="185" x2="374" y2="185" stroke="#0F2756" stroke-width="0.75" stroke-dasharray="3 2" />
+              <line x1="320" y1="204" x2="374" y2="204" stroke="#0F2756" stroke-width="0.75" stroke-dasharray="3 2" />
+              <line x1="344" y1="175" x2="350" y2="175" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="344" y1="194" x2="350" y2="194" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="344" y1="213" x2="350" y2="213" stroke="#0F2756" stroke-width="0.75" />
+              <!-- Stool -->
+              <ellipse cx="430" cy="204" rx="16" ry="3" stroke="#0F2756" stroke-width="0.75" fill="#FAF8F4" />
+              <line x1="430" y1="207" x2="430" y2="240" stroke="#0F2756" stroke-width="0.75" />
+              <ellipse cx="430" cy="238" rx="12" ry="2" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <!-- Equipment: Digital Storage Oscilloscope with screen grid -->
+              <rect x="390" y="122" width="48" height="34" stroke="#0F2756" stroke-width="0.75" fill="#FAF8F4" />
+              <rect x="395" y="127" width="24" height="20" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <line x1="395" y1="137" x2="419" y2="137" stroke="#0F2756" stroke-width="0.75" stroke-dasharray="1 1" />
+              <line x1="407" y1="127" x2="407" y2="147" stroke="#0F2756" stroke-width="0.75" stroke-dasharray="1 1" />
+              <circle cx="427" cy="132" r="2.5" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <circle cx="427" cy="142" r="2.5" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <line x1="432" y1="150" x2="455" y2="156" stroke="#0F2756" stroke-width="0.75" />
+
+              <!-- WORKBENCH 3: Engineering Laptop Bay -->
+              <rect x="540" y="156" width="180" height="10" stroke="#0F2756" stroke-width="1.25" fill="#FAF8F4" />
+              <line x1="546" y1="166" x2="546" y2="240" stroke="#0F2756" stroke-width="1.25" />
+              <line x1="714" y1="166" x2="714" y2="240" stroke="#0F2756" stroke-width="1.25" />
+              <line x1="546" y1="228" x2="714" y2="228" stroke="#0F2756" stroke-width="0.75" />
+              <!-- Drawer unit -->
+              <rect x="656" y="166" width="54" height="58" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <line x1="656" y1="185" x2="710" y2="185" stroke="#0F2756" stroke-width="0.75" stroke-dasharray="3 2" />
+              <line x1="656" y1="204" x2="710" y2="204" stroke="#0F2756" stroke-width="0.75" stroke-dasharray="3 2" />
+              <line x1="680" y1="175" x2="686" y2="175" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="680" y1="194" x2="686" y2="194" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="680" y1="213" x2="686" y2="213" stroke="#0F2756" stroke-width="0.75" />
+              <!-- Stool -->
+              <ellipse cx="600" cy="204" rx="16" ry="3" stroke="#0F2756" stroke-width="0.75" fill="#FAF8F4" />
+              <line x1="600" y1="207" x2="600" y2="240" stroke="#0F2756" stroke-width="0.75" />
+              <ellipse cx="600" cy="238" rx="12" ry="2" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <!-- Equipment: Rugged laptop with angled screen -->
+              <line x1="565" y1="155" x2="595" y2="155" stroke="#0F2756" stroke-width="1.25" />
+              <line x1="590" y1="155" x2="598" y2="136" stroke="#0F2756" stroke-width="1.25" />
+              <line x1="570" y1="155" x2="578" y2="136" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="578" y1="136" x2="598" y2="136" stroke="#0F2756" stroke-width="0.75" />
+
+              <!-- DIMENSION LINE: Central activity space -->
+              <line x1="80" y1="262" x2="720" y2="262" stroke="#0F2756" stroke-width="0.75" />
+              <polyline points="86,259 80,262 86,265" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <polyline points="714,259 720,262 714,265" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <line x1="80" y1="255" x2="80" y2="269" stroke="#0F2756" stroke-width="0.75" />
+              <line x1="720" y1="255" x2="720" y2="269" stroke="#0F2756" stroke-width="0.75" />
+              <text x="400" y="278" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="11" fill="#555B66">Central activity space</text>
+
+              <!-- CALLOUT 1: Overhead power drop -->
+              <polyline points="400,95 440,75 500,75" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <circle cx="400" cy="95" r="2" fill="#0F2756" />
+              <text x="506" y="78" font-family="'IBM Plex Mono', monospace" font-size="10.5" fill="#14171C">Overhead power drop</text>
+
+              <!-- CALLOUT 2: Workbench -->
+              <polyline points="260,161 285,145 285,120" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <circle cx="260" cy="161" r="2" fill="#0F2756" />
+              <text x="285" y="114" font-family="'IBM Plex Mono', monospace" font-size="10.5" fill="#14171C">Workbench</text>
+
+              <!-- CALLOUT 3: Station -->
+              <polyline points="414,122 435,105 470,105" stroke="#0F2756" stroke-width="0.75" fill="none" />
+              <circle cx="414" cy="122" r="2" fill="#0F2756" />
+              <text x="476" y="108" font-family="'IBM Plex Mono', monospace" font-size="10.5" fill="#14171C">Station</text>
             </svg>
+
             <div class="plate-title-block font-mono">
-              <span class="fig-id">FIG. 01 &middot; CENTRAL B119 WORKBENCH BAYS</span>
-              <span>DWG: ELC-B119-01 &middot; SCALE: 1:25</span>
-              <span>TIET PATIALA</span>
+              <span class="fig-id">FIG. 01 &middot; Central workbench bays</span>
+              <span>Illustration, not to scale</span>
             </div>
           </div>
 
@@ -283,7 +416,12 @@
 
         </div>
 
-        <div style="padding-top: 2.5rem;">
+        <!-- Semester curve caption (12px sans, muted) -->
+        <div class="ascent-curve-caption font-sans">
+          Five semesters, five stages. Each builds on the last.
+        </div>
+
+        <div style="padding-top: 2rem;">
           <a href="#curriculum" class="link-editorial">See the five semesters</a>
         </div>
 
@@ -306,10 +444,13 @@
 
         <div class="studios-list">
           
-          <!-- Waveform Row Divider: Sawtooth Torque Curve (Full Width, Whole Cycles) -->
-          <svg class="studio-wave-divider" data-wave="sawtooth" aria-hidden="true">
-            <path class="studio-wave-path" d="" />
-          </svg>
+          <!-- Waveform Row Divider: Sawtooth (Full Width, Whole Cycles, pathLength=1) -->
+          <div class="studio-divider-wrap" aria-hidden="true">
+            <svg class="studio-wave-divider" data-wave="sawtooth" viewBox="0 0 1000 24" preserveAspectRatio="none">
+              <path class="studio-wave-path" pathLength="1" d="" />
+            </svg>
+            <span class="studio-divider-label font-mono">sawtooth</span>
+          </div>
 
           <!-- Studio 01 (B119 ground floor) -->
           <article class="studio-row" aria-labelledby="studio-1-title">
@@ -345,10 +486,13 @@
             </div>
           </article>
 
-          <!-- Waveform Row Divider: Sine Wave (Full Width, Whole Cycles) -->
-          <svg class="studio-wave-divider" data-wave="sine" aria-hidden="true">
-            <path class="studio-wave-path" d="" />
-          </svg>
+          <!-- Waveform Row Divider: Sine (Full Width, Whole Cycles, pathLength=1) -->
+          <div class="studio-divider-wrap" aria-hidden="true">
+            <svg class="studio-wave-divider" data-wave="sine" viewBox="0 0 1000 24" preserveAspectRatio="none">
+              <path class="studio-wave-path" pathLength="1" d="" />
+            </svg>
+            <span class="studio-divider-label font-mono">sine</span>
+          </div>
 
           <!-- Studio 02 (B119 mezzanine) -->
           <article class="studio-row" aria-labelledby="studio-2-title">
@@ -385,10 +529,13 @@
             </div>
           </article>
 
-          <!-- Waveform Row Divider: PWM Square Pulse (Full Width, Whole Cycles) -->
-          <svg class="studio-wave-divider" data-wave="pwm" aria-hidden="true">
-            <path class="studio-wave-path" d="" />
-          </svg>
+          <!-- Waveform Row Divider: PWM (Full Width, Whole Cycles, pathLength=1) -->
+          <div class="studio-divider-wrap" aria-hidden="true">
+            <svg class="studio-wave-divider" data-wave="pwm" viewBox="0 0 1000 24" preserveAspectRatio="none">
+              <path class="studio-wave-path" pathLength="1" d="" />
+            </svg>
+            <span class="studio-divider-label font-mono">PWM</span>
+          </div>
 
           <!-- Studio 03 (Central Bay) -->
           <article class="studio-row" aria-labelledby="studio-3-title">

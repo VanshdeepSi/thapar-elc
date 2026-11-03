@@ -10,3 +10,6 @@ package-lock.json
 # Logs & Temp
 *.log
 .temp/
+
+screenshots/
+

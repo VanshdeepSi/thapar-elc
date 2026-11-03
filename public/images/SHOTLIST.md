@@ -92,3 +92,4 @@ This document specifies the required photographic assets for the ELC homepage. E
 - **Location:** B119 Nano-Satellite Lab.
 - **Orientation:** Landscape ($16:10$), minimum $2400\text{px}\times 1500\text{px}$.
 - **Subject:** The cylindrical stainless-steel vacuum chamber with optical viewport window revealing a 1U/3U nanosatellite frame on the vibration stage inside.
+
