@@ -97,9 +97,9 @@
         carInitialSet = true;
       }
 
-      // Tower geometry: ~84% of width
+      // Tower geometry: ~84% of width, anchored cleanly to bottom baseline
       towerX = Math.round(width * 0.84);
-      floorY = height * 0.90;
+      floorY = height - 28;
       towerTopY = Math.max(25, floorY - 180);
       platformY = towerTopY + 28;
 
@@ -536,7 +536,7 @@
       currentFreqMod += (targetFreqMod - currentFreqMod) * 0.05;
       ctx.clearRect(0, 0, width, height);
 
-      const midY = height * 0.58;
+      const midY = height - 114;
       const k0 = (2 * Math.PI) / (baseWavelength * currentFreqMod);
 
       // 1. Draw Harmonics at 28% Opacity (clearly visible)
@@ -600,9 +600,14 @@
           // t=2.0s: Ignition; 6s flight to t=8s
           isMidFlight = true;
           rocketInFlight = true;
-          rocketOpacity = 1;
           const flightTau = (tCycle - 2.0) / 6.0;
           flightProgress = solveCubicBezier(flightTau, 0.4, 0, 0.9, 0.5);
+          // Fade out smoothly as rocket reaches top/exit so it never pops
+          if (flightProgress > 0.88) {
+            rocketOpacity = Math.max(0, (1 - flightProgress) / 0.12);
+          } else {
+            rocketOpacity = 1;
+          }
           trailAlpha = 0.5;
         } else if (tCycle < 13.0) {
           // t=8s: Exited top-right; trail fading over 5s into permanent 12% dashed arc

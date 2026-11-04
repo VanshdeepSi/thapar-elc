@@ -299,8 +299,8 @@ async function runAllTests() {
       { id: 'curriculum', expectedIndex: '02', expectedName: 'Curriculum' },
       { id: 'studios', expectedIndex: '03', expectedName: 'Studios' },
       { id: 'projects', expectedIndex: '04', expectedName: 'Projects' },
-      { id: 'news', expectedIndex: '05', expectedName: 'News' },
-      { id: 'people', expectedIndex: '06', expectedName: 'People' }
+      { id: 'people', expectedIndex: '05', expectedName: 'People' },
+      { id: 'contact', expectedIndex: '06', expectedName: 'Contact' }
     ];
 
     for (const item of expectedSequence) {

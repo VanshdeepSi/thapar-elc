@@ -97,9 +97,9 @@
         carInitialSet = true;
       }
 
-      // Tower geometry: ~84% of width
+      // Tower geometry: ~84% of width, anchored cleanly to bottom baseline
       towerX = Math.round(width * 0.84);
-      floorY = height * 0.90;
+      floorY = height - 28;
       towerTopY = Math.max(25, floorY - 180);
       platformY = towerTopY + 28;
 
@@ -536,7 +536,7 @@
       currentFreqMod += (targetFreqMod - currentFreqMod) * 0.05;
       ctx.clearRect(0, 0, width, height);
 
-      const midY = height * 0.58;
+      const midY = height - 114;
       const k0 = (2 * Math.PI) / (baseWavelength * currentFreqMod);
 
       // 1. Draw Harmonics at 28% Opacity (clearly visible)
@@ -600,9 +600,14 @@
           // t=2.0s: Ignition; 6s flight to t=8s
           isMidFlight = true;
           rocketInFlight = true;
-          rocketOpacity = 1;
           const flightTau = (tCycle - 2.0) / 6.0;
           flightProgress = solveCubicBezier(flightTau, 0.4, 0, 0.9, 0.5);
+          // Fade out smoothly as rocket reaches top/exit so it never pops
+          if (flightProgress > 0.88) {
+            rocketOpacity = Math.max(0, (1 - flightProgress) / 0.12);
+          } else {
+            rocketOpacity = 1;
+          }
           trailAlpha = 0.5;
         } else if (tCycle < 13.0) {
           // t=8s: Exited top-right; trail fading over 5s into permanent 12% dashed arc
@@ -768,8 +773,8 @@
       { id: 'curriculum', index: '02', name: 'Curriculum' },
       { id: 'studios', index: '03', name: 'Studios' },
       { id: 'projects', index: '04', name: 'Projects' },
-      { id: 'news', index: '05', name: 'News' },
-      { id: 'people', index: '06', name: 'People' }
+      { id: 'people', index: '05', name: 'People' },
+      { id: 'contact', index: '06', name: 'Contact' }
     ];
 
     function update() {
@@ -868,12 +873,10 @@
 
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
       path.setAttribute('d', d);
-      path.removeAttribute('pathLength');
-      const len = Math.ceil(path.getTotalLength()) || 1800;
-      svg.style.setProperty('--wave-len', `${len}px`);
-      path.style.setProperty('--wave-len', `${len}px`);
-      path.style.strokeDasharray = `${len}px`;
-      path.style.strokeDashoffset = '0px';
+      path.setAttribute('pathLength', '1');
+      path.setAttribute('vector-effect', 'non-scaling-stroke');
+      path.style.strokeDasharray = '1';
+      path.style.strokeDashoffset = '0';
     }
 
     function triggerWaveRedraw(wrap) {
@@ -923,10 +926,11 @@
     const path = document.getElementById('ascentPath');
     const trail = document.getElementById('ascentTrail');
     const rocket = document.getElementById('ascentRocketGlyph');
+    const overlay = document.getElementById('ascentRocketOverlay');
     const stageItems = document.querySelectorAll('.ascent-stage-item');
     const stageTicks = document.querySelectorAll('.ascent-stage-tick, .ascent-tick');
 
-    if (!svg || !path || !rocket) return;
+    if (!svg || !path) return;
 
     if (trail) {
       trail.setAttribute('pathLength', '1');
@@ -937,9 +941,20 @@
     const tickThresholds = [0.08, 0.28, 0.48, 0.68, 0.88];
 
     function checkAscent() {
+      const curveWrap = document.querySelector('.ascent-curve-svg-wrap') || svg;
+
       if (prefersReducedMotion) {
         const ptFinal = path.getPointAtLength(pathLength);
-        rocket.setAttribute('transform', `translate(${ptFinal.x}, ${ptFinal.y}) rotate(90)`);
+        if (rocket) rocket.setAttribute('transform', `translate(${ptFinal.x}, ${ptFinal.y}) rotate(90)`);
+        if (overlay && svg.getScreenCTM && curveWrap) {
+          const ctm = svg.getScreenCTM();
+          if (ctm) {
+            const wrapRect = curveWrap.getBoundingClientRect();
+            const sx = ptFinal.x * ctm.a + ptFinal.y * ctm.c + ctm.e;
+            const sy = ptFinal.x * ctm.b + ptFinal.y * ctm.d + ctm.f;
+            overlay.style.transform = `translate(${sx - wrapRect.left - 12}px, ${sy - wrapRect.top - 12}px) rotate(90deg)`;
+          }
+        }
         if (trail) {
           trail.setAttribute('pathLength', '1');
           trail.style.strokeDasharray = '1';
@@ -949,7 +964,6 @@
         return;
       }
 
-      const curveWrap = document.querySelector('.ascent-curve-svg-wrap') || svg;
       const rect = curveWrap.getBoundingClientRect();
       const winH = window.innerHeight;
 
@@ -969,8 +983,23 @@
       const angleRad = Math.atan2(ptAhead.y - ptBehind.y, ptAhead.x - ptBehind.x);
       const angleDeg = (angleRad * 180) / Math.PI;
 
-      // Position rocket glyph and rotate along tangent
-      rocket.setAttribute('transform', `translate(${pt.x}, ${pt.y}) rotate(${angleDeg + 90})`);
+      // Position rocket glyph inside SVG if present
+      if (rocket) {
+        rocket.setAttribute('transform', `translate(${pt.x}, ${pt.y}) rotate(${angleDeg + 90})`);
+      }
+
+      // Position distortion-free HTML/SVG overlay via getPointAtLength + getScreenCTM
+      if (overlay && svg.getScreenCTM && curveWrap) {
+        const ctm = svg.getScreenCTM();
+        if (ctm) {
+          const wrapRect = curveWrap.getBoundingClientRect();
+          const screenX = pt.x * ctm.a + pt.y * ctm.c + ctm.e;
+          const screenY = pt.x * ctm.b + pt.y * ctm.d + ctm.f;
+          const x = screenX - wrapRect.left;
+          const y = screenY - wrapRect.top;
+          overlay.style.transform = `translate(${x - 12}px, ${y - 12}px) rotate(${angleDeg + 90}deg)`;
+        }
+      }
 
       // Fading trailing path
       if (trail) {
